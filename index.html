@@ -73,6 +73,49 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .badge-tri{background:rgba(232,122,80,.1);color:#e87a50}
 .badge-sh{background:rgba(93,184,122,.1);color:#5db87a}
 .img-credit{position:absolute;bottom:4px;right:6px;font-size:9px;color:rgba(255,255,255,.25)}
+.ex-top-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:8px}
+.ex-check{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);background:none;color:var(--muted);font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+.ex-check.done{background:#5db87a;border-color:#5db87a;color:#0f0f0f}
+.ex-card.done{border-color:rgba(93,184,122,.4)}
+.ex-steps{margin:10px 0 0;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.6}
+.ex-steps li{margin-bottom:4px}
+.ex-last{font-size:12px;color:var(--muted);margin-top:10px}
+.log-history{font-size:11.5px;color:var(--muted);margin-top:2px}
+.log-history div{display:flex;justify-content:space-between;padding:5px 0;border-top:.5px solid var(--border)}
+.ex-actions{display:flex;gap:8px;margin-top:12px}
+.ex-action-btn{flex:1;padding:9px;border-radius:10px;border:.5px solid var(--border);background:var(--surface);color:var(--text);font-size:12.5px;font-weight:600;cursor:pointer}
+.ex-action-btn.active{background:var(--card);border-color:var(--muted)}
+.timer-panel,.log-panel{margin-top:12px;padding:14px;background:var(--surface);border-radius:12px;border:.5px solid var(--border)}
+.timer-display{font-size:34px;font-weight:700;text-align:center;margin-bottom:10px;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.timer-adjust{display:flex;justify-content:center;gap:16px;margin-bottom:10px;font-size:12px;color:var(--muted)}
+.timer-adjust button{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 8px}
+.timer-controls{display:flex;gap:8px}
+.timer-controls button{flex:1;padding:9px;border-radius:8px;border:none;background:var(--card);color:var(--text);font-size:12.5px;font-weight:600;cursor:pointer}
+.timer-controls button.primary{background:var(--arms);color:#fff}
+.timer-panel.flash{animation:flashbg .5s ease 4}
+@keyframes flashbg{0%,100%{background:var(--surface)}50%{background:rgba(93,184,122,.35)}}
+.log-form{display:flex;gap:8px;margin-bottom:8px}
+.log-form input{flex:1;min-width:0;background:var(--card);border:.5px solid var(--border);border-radius:8px;padding:9px 8px;color:var(--text);font-size:13px}
+.log-form button{padding:9px 14px;border-radius:8px;border:none;background:var(--arms);color:#fff;font-weight:600;font-size:12.5px;flex-shrink:0}
+.day-progress{font-size:12px;color:var(--muted);margin-bottom:12px}
+.step-arrow{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.step-arrow.prev{left:6px}.step-arrow.next{right:6px}
+.step-dots{position:absolute;bottom:6px;left:0;right:0;display:flex;justify-content:center;gap:4px;z-index:2}
+.step-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}
+.step-dot.active{background:#fff}
+.milestone-card{background:var(--card);border:.5px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.milestone-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
+.milestone-title{font-size:14px;font-weight:600}
+.milestone-del{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;flex-shrink:0;line-height:1}
+.milestone-meta{font-size:12px;color:var(--muted);margin-top:8px}
+.add-milestone-form{background:var(--card);border:.5px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:16px}
+.add-milestone-form label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+.add-milestone-form select,.add-milestone-form input{width:100%;background:var(--surface);border:.5px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-size:13px;margin-bottom:10px}
+.add-milestone-form button{width:100%;padding:10px;border-radius:8px;border:none;background:var(--full);color:#fff;font-weight:600;font-size:13px}
+.activity-item{display:flex;justify-content:space-between;font-size:12.5px;padding:9px 0;border-top:.5px solid var(--border)}
+.activity-item:first-child{border-top:none}
+.activity-item span:last-child{color:var(--muted)}
+.empty-note{font-size:12.5px;color:var(--muted);text-align:center;padding:16px 0}
 </style>
 </head>
 <body>
@@ -94,246 +137,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 
       <div id="ex-chest">
         <div class="ex-section-label">Chest & Triceps · Day 1</div>
-        <div class="ex-card" data-img="Barbell_Bench_Press_-_Medium_Grip/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Barbell bench press</div><span class="ex-badge badge-chest">Primary</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-chest">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">6–8</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">90s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Shoulder blades squeezed, feet into the floor. As an ectomorph, heavy compound lifts are your best friend.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Incline_Dumbbell_Press/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Incline dumbbell press</div><span class="ex-badge badge-chest">Upper chest</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-chest">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">8–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Set bench at 30 to 45 degrees. Squeeze hard at the top. Builds upper chest thickness.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Flat_Bench_Cable_Flyes/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Cable chest fly</div><span class="ex-badge badge-chest">Isolation</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-chest">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">12–15</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Control the stretch on the return. Slight elbow bend. Builds the inner chest line.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Close-Grip_Barbell_Bench_Press/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Close-grip bench press</div><span class="ex-badge badge-tri">Triceps</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-chest">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">8–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Grip just inside shoulder width, elbows tucked. Triceps make up 2/3 of arm size.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Triceps_Pushdown/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Tricep pushdown</div><span class="ex-badge badge-tri">Triceps</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-chest">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">12–15</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-chest">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Full extension every rep. Spread the rope at the bottom for full lateral head activation.</div>
-          </div>
-        </div>
+        <div class="day-progress" data-day-progress="chest"></div>
+        <div class="ex-card-list" data-day-list="chest"></div>
       </div>
 
       <div id="ex-legs" style="display:none">
         <div class="ex-section-label">Legs & Glutes · Day 2</div>
-        <div class="ex-card" data-img="Barbell_Squat/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Barbell back squat</div><span class="ex-badge badge-legs">Primary</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-legs">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">5–7</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">120s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Break parallel. Brace your core hard. The king of mass builders for ectomorphs.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Romanian_Deadlift/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Romanian deadlift</div><span class="ex-badge badge-legs">Hamstrings</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-legs">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">8–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">90s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Hinge at hips, soft knees. Feel the hamstring stretch before driving back up.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Leg_Press/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Leg press</div><span class="ex-badge badge-legs">Quads</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-legs">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">10–12</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Feet hip-width mid-platform. Don't lock out knees at the top.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Bodyweight_Walking_Lunge/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Walking lunges</div><span class="ex-badge badge-legs">Glutes</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-legs">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">10 each</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Torso upright, front knee tracks over toe. Builds symmetry and glute size.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Standing_Calf_Raises/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Standing calf raise</div><span class="ex-badge badge-legs">Calves</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-legs">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">15–20</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-legs">45s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Full range of motion. Hold at the top 1 second. Calves respond to high reps.</div>
-          </div>
-        </div>
+        <div class="day-progress" data-day-progress="legs"></div>
+        <div class="ex-card-list" data-day-list="legs"></div>
       </div>
 
       <div id="ex-arms" style="display:none">
         <div class="ex-section-label">Arms & Shoulders · Day 4</div>
-        <div class="ex-card" data-img="Barbell_Curl/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Barbell curl</div><span class="ex-badge badge-arms">Biceps</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-arms">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">8–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Elbows fixed at sides. Full extension at the bottom. Go heavy — biceps need progressive overload.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Incline_Dumbbell_Curl/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Incline dumbbell curl</div><span class="ex-badge badge-arms">Long head</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-arms">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">10–12</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Incline gives a longer stretch. Hold the peak squeeze 1 second. Builds the bicep peak.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Standing_Military_Press/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Overhead press</div><span class="ex-badge badge-sh">Shoulders</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-arms">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">6–8</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">90s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Press from chin height. Lock out fully. Broad shoulders make arms look significantly bigger.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Side_Lateral_Raise/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Lateral raises</div><span class="ex-badge badge-sh">Side delts</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-arms">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">12–15</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Lead with elbows, stop at shoulder height. Builds the wide, capped shoulder look.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="EZ-Bar_Skullcrusher/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Skull crushers</div><span class="ex-badge badge-tri">Triceps</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-arms">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">10–12</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-arms">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Lower slowly to forehead. Upper arms stay vertical. Great overall tricep mass builder.</div>
-          </div>
-        </div>
+        <div class="day-progress" data-day-progress="arms"></div>
+        <div class="ex-card-list" data-day-list="arms"></div>
       </div>
 
       <div id="ex-full" style="display:none">
         <div class="ex-section-label">Full Body Power · Day 5</div>
-        <div class="ex-card" data-img="Barbell_Deadlift/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Deadlift</div><span class="ex-badge badge-full">King lift</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-full">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">4–6</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">120s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Flat back, chest up, push the floor away. Recruits the entire body — ultimate ectomorph mass builder.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Pullups/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Pull-up</div><span class="ex-badge badge-full">Back width</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-full">4</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">6–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">90s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Full hang at bottom, chin over bar at top. Builds lats that make your body look much larger.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Dips_-_Chest_Version/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Dips</div><span class="ex-badge badge-full">Chest + tris</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-full">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">8–10</div><div class="ex-stat-lbl">Reps</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">75s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Lean forward for more chest. Add weight belt once bodyweight becomes easy.</div>
-          </div>
-        </div>
-        <div class="ex-card" data-img="Farmers_Walk/0.jpg">
-          <div class="ex-img-wrap"><div class="img-loading">⏳</div></div>
-          <div class="ex-body">
-            <div class="ex-card-top"><div class="ex-name">Farmer's carry</div><span class="ex-badge badge-full">Functional</span></div>
-            <div class="ex-stats">
-              <div class="ex-stat"><div class="ex-stat-val c-full">3</div><div class="ex-stat-lbl">Sets</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">30m</div><div class="ex-stat-lbl">Distance</div></div>
-              <div class="ex-stat"><div class="ex-stat-val c-full">60s</div><div class="ex-stat-lbl">Rest</div></div>
-            </div>
-            <div class="ex-tip">Heavy dumbbells, tall posture. Builds forearms, traps, and core simultaneously.</div>
-          </div>
-        </div>
+        <div class="day-progress" data-day-progress="full"></div>
+        <div class="ex-card-list" data-day-list="full"></div>
       </div>
 
       <div id="ex-rest" style="display:none">
@@ -406,11 +229,29 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       <div class="info-card"><div class="info-title">😴 Sleep is your anabolic window</div><div class="info-body">Growth hormone is released during deep sleep. Ectomorphs need 8 to 9 hours. Treat sleep as part of your training program.</div></div>
       <div class="info-card"><div class="info-title">📈 Track progressive overload</div><div class="info-body">Write down your weights and reps every single session. If you're not lifting more over time, your muscles have no reason to grow.</div></div>
     </div>
+
+    <div id="tab-progress" class="section">
+      <div class="section-heading">Milestones</div>
+      <div class="add-milestone-form">
+        <label for="ms-exercise">Exercise</label>
+        <select id="ms-exercise"></select>
+        <label for="ms-weight">Target weight (kg)</label>
+        <input type="number" id="ms-weight" min="1" step="0.5" placeholder="e.g. 100"/>
+        <label for="ms-date">Target date (optional)</label>
+        <input type="date" id="ms-date"/>
+        <button onclick="addMilestone()">+ Add milestone</button>
+      </div>
+      <div id="milestone-list"></div>
+
+      <div class="section-heading" style="margin-top:8px">Recent activity</div>
+      <div id="activity-list"></div>
+    </div>
   </div>
 
   <nav class="nav">
     <button class="nav-item active" onclick="showTab('weekly',this)"><span class="nav-icon">📅</span><span>Plan</span></button>
     <button class="nav-item" onclick="showTab('muscles',this)"><span class="nav-icon">💪</span><span>Muscles</span></button>
+    <button class="nav-item" onclick="showTab('progress',this)"><span class="nav-icon">📈</span><span>Progress</span></button>
     <button class="nav-item" onclick="showTab('tips',this)"><span class="nav-icon">💡</span><span>Tips</span></button>
   </nav>
 </div>
@@ -419,29 +260,384 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 // Exercise photos from free-exercise-db (CC0), served via jsDelivr CDN
 const IMAGE_BASE = 'https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/';
 
-function loadExerciseImage(card) {
-  const imgPath = card.dataset.img;
-  const wrap = card.querySelector('.ex-img-wrap');
-  if (!imgPath || !wrap) return;
+const EXERCISES = [
+  { key:'barbell-bench-press', day:'chest', name:'Barbell bench press', badge:'Primary', badgeClass:'badge-chest', statColor:'c-chest', sets:4, reps:'6–8', rest:90, tip:'Shoulder blades squeezed, feet into the floor. As an ectomorph, heavy compound lifts are your best friend.', img:'Barbell_Bench_Press_-_Medium_Grip/0.jpg' },
+  { key:'incline-dumbbell-press', day:'chest', name:'Incline dumbbell press', badge:'Upper chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'8–10', rest:75, tip:'Set bench at 30 to 45 degrees. Squeeze hard at the top. Builds upper chest thickness.', img:'Incline_Dumbbell_Press/0.jpg' },
+  { key:'cable-chest-fly', day:'chest', name:'Cable chest fly', badge:'Isolation', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'12–15', rest:60, tip:'Control the stretch on the return. Slight elbow bend. Builds the inner chest line.', img:'Flat_Bench_Cable_Flyes/0.jpg' },
+  { key:'close-grip-bench-press', day:'chest', name:'Close-grip bench press', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'8–10', rest:75, tip:'Grip just inside shoulder width, elbows tucked. Triceps make up 2/3 of arm size.', img:'Close-Grip_Barbell_Bench_Press/0.jpg' },
+  { key:'tricep-pushdown', day:'chest', name:'Tricep pushdown', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'12–15', rest:60, tip:'Full extension every rep. Spread the rope at the bottom for full lateral head activation.', img:'Triceps_Pushdown/0.jpg' },
 
+  { key:'barbell-back-squat', day:'legs', name:'Barbell back squat', badge:'Primary', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'5–7', rest:120, tip:'Break parallel. Brace your core hard. The king of mass builders for ectomorphs.', img:'Barbell_Squat/0.jpg' },
+  { key:'romanian-deadlift', day:'legs', name:'Romanian deadlift', badge:'Hamstrings', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8–10', rest:90, tip:'Hinge at hips, soft knees. Feel the hamstring stretch before driving back up.', img:'Romanian_Deadlift/0.jpg' },
+  { key:'leg-press', day:'legs', name:'Leg press', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:75, tip:"Feet hip-width mid-platform. Don't lock out knees at the top.", img:'Leg_Press/0.jpg' },
+  { key:'walking-lunges', day:'legs', name:'Walking lunges', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10 each', rest:60, tip:'Torso upright, front knee tracks over toe. Builds symmetry and glute size.', img:'Bodyweight_Walking_Lunge/0.jpg' },
+  { key:'standing-calf-raise', day:'legs', name:'Standing calf raise', badge:'Calves', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'15–20', rest:45, tip:'Full range of motion. Hold at the top 1 second. Calves respond to high reps.', img:'Standing_Calf_Raises/0.jpg' },
+
+  { key:'barbell-curl', day:'arms', name:'Barbell curl', badge:'Biceps', badgeClass:'badge-arms', statColor:'c-arms', sets:4, reps:'8–10', rest:75, tip:'Elbows fixed at sides. Full extension at the bottom. Go heavy — biceps need progressive overload.', img:'Barbell_Curl/0.jpg' },
+  { key:'incline-dumbbell-curl', day:'arms', name:'Incline dumbbell curl', badge:'Long head', badgeClass:'badge-arms', statColor:'c-arms', sets:3, reps:'10–12', rest:60, tip:'Incline gives a longer stretch. Hold the peak squeeze 1 second. Builds the bicep peak.', img:'Incline_Dumbbell_Curl/0.jpg' },
+  { key:'overhead-press', day:'arms', name:'Overhead press', badge:'Shoulders', badgeClass:'badge-sh', statColor:'c-arms', sets:4, reps:'6–8', rest:90, tip:'Press from chin height. Lock out fully. Broad shoulders make arms look significantly bigger.', img:'Standing_Military_Press/0.jpg' },
+  { key:'lateral-raises', day:'arms', name:'Lateral raises', badge:'Side delts', badgeClass:'badge-sh', statColor:'c-arms', sets:3, reps:'12–15', rest:60, tip:'Lead with elbows, stop at shoulder height. Builds the wide, capped shoulder look.', img:'Side_Lateral_Raise/0.jpg' },
+  { key:'skull-crushers', day:'arms', name:'Skull crushers', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-arms', sets:3, reps:'10–12', rest:75, tip:'Lower slowly to forehead. Upper arms stay vertical. Great overall tricep mass builder.', img:'EZ-Bar_Skullcrusher/0.jpg' },
+
+  { key:'deadlift', day:'full', name:'Deadlift', badge:'King lift', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'4–6', rest:120, tip:'Flat back, chest up, push the floor away. Recruits the entire body — ultimate ectomorph mass builder.', img:'Barbell_Deadlift/0.jpg' },
+  { key:'pull-up', day:'full', name:'Pull-up', badge:'Back width', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'6–10', rest:90, tip:'Full hang at bottom, chin over bar at top. Builds lats that make your body look much larger.', img:'Pullups/0.jpg' },
+  { key:'dips', day:'full', name:'Dips', badge:'Chest + tris', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'8–10', rest:75, tip:'Lean forward for more chest. Add weight belt once bodyweight becomes easy.', img:'Dips_-_Chest_Version/0.jpg' },
+  { key:'farmers-carry', day:'full', name:"Farmer's carry", badge:'Functional', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'30m', repsLabel:'Distance', rest:60, tip:'Heavy dumbbells, tall posture. Builds forearms, traps, and core simultaneously.', img:'Farmers_Walk/0.jpg' }
+];
+
+// Written form cues per exercise, sourced from the free-exercise-db (CC0) dataset
+const EXERCISE_STEPS = {
+  'barbell-bench-press': ["Lie back on a flat bench. Using a medium width grip, lift the bar from the rack and hold it straight over you with your arms locked. This is your starting position.","From the starting position, breathe in and begin coming down slowly until the bar touches your middle chest.","After a brief pause, push the bar back to the starting position as you breathe out, focusing on pushing with your chest. Lock out and squeeze at the top, hold a second.","Repeat for the prescribed reps.","When done, place the bar back in the rack."],
+  'incline-dumbbell-press': ["Lie back on an incline bench with a dumbbell in each hand atop your thighs, palms facing each other.","Using your thighs to help, lift the dumbbells one at a time up to shoulder width.","Rotate your wrists so palms face away from you. This is your starting position.","Keeping control, breathe out and push the dumbbells up with your chest.","Lock out at the top, hold a second, then lower slowly.","Repeat for the prescribed reps.","When done, lower the dumbbells to your thighs, then to the floor."],
+  'cable-chest-fly': ["Position a flat bench between two low pulleys so your chest lines up with the cables.","Lie flat on the bench, feet on the ground.","Grab a handle in each hand with a palms-up grip.","Extend your arms out to your sides with a slight elbow bend — this is your starting position.","Lift the arms in a semi-circle in front of you until your hands meet, squeezing your chest and exhaling. Hold a second at the top.","Slowly return to the starting position.","Repeat for the prescribed reps."],
+  'close-grip-bench-press': ["Lie back on a flat bench. Using a close, shoulder-width grip, lift the bar and hold it straight over you with arms locked — this is your starting position.","Breathing in, lower the bar slowly until it touches your middle chest, keeping elbows tucked close to maximize triceps involvement.","After a pause, press back up as you breathe out, driving with your triceps. Lock out and hold a second.","Repeat for the prescribed reps.","When done, place the bar back in the rack."],
+  'tricep-pushdown': ["Attach a bar to a high pulley and grab it overhand at shoulder width.","Stand upright, torso mostly straight, upper arms close to your body and perpendicular to the floor — this is your starting position.","Using your triceps, push the bar down until your arms are fully extended, keeping upper arms stationary. Exhale as you push.","Hold a second at the bottom, then let the bar rise slowly as you inhale.","Repeat for the prescribed reps."],
+  'barbell-back-squat': ["Set the bar on a rack at shoulder level, step under it and rest it across the back of your shoulders.","Lift the bar off the rack by pushing with your legs and straightening your torso.","Step back and set your feet shoulder width, toes slightly out, head up, back straight — this is your starting position.","Lower slowly by bending knees and hips, keeping a straight posture, until thighs are just past parallel. Inhale as you descend.","Drive back up by pushing through your heels as you exhale.","Repeat for the prescribed reps."],
+  'romanian-deadlift': ["Grab a barbell in front of you with a shoulder-width overhand grip.","Bend the knees slightly, shins vertical, hips back, back straight — this is your starting position.","Keeping back and arms straight, drive your hips forward to lift the bar as you exhale.","Once standing tall, lower the bar by pushing your hips back with only a slight knee bend, feeling the hamstring stretch.","Repeat for the prescribed reps."],
+  'leg-press': ["Sit on the leg press machine with feet on the platform at shoulder width.","Release the safety bars and press the platform up until legs are extended without locking the knees — this is your starting position.","Inhale and lower the platform slowly until your knees reach about 90 degrees.","Push mainly through your heels back to the starting position as you exhale.","Repeat for the prescribed reps, then re-lock the safety pins."],
+  'walking-lunges': ["Stand with feet shoulder-width apart, hands on hips.","Step forward with one leg, bending both knees to drop your hips until the rear knee nearly touches the ground, torso upright.","Drive through the front heel and extend both knees to rise back up.","Step through with the rear foot and repeat on the opposite leg."],
+  'standing-calf-raise': ["Position your shoulders under the pads with the balls of your feet on the block, heels hanging off, knees slightly bent — this is your starting position.","Raise your heels as high as possible, flexing your calves and exhaling. Hold the top for a second.","Lower slowly back down as you inhale, stretching the calves at the bottom.","Repeat for the prescribed reps."],
+  'barbell-curl': ["Stand upright holding a barbell at shoulder width, palms forward, elbows close to your torso — this is your starting position.","Keeping upper arms stationary, curl the bar up as you exhale, moving only the forearms.","Squeeze at the top for a second once biceps are fully contracted.","Lower slowly back to the starting position as you inhale.","Repeat for the prescribed reps."],
+  'incline-dumbbell-curl': ["Sit back on an incline bench with a dumbbell in each hand at arm's length, elbows close to your torso, palms forward — this is your starting position.","Curl the weights up while keeping upper arms stationary, exhaling as you go, until biceps are fully contracted. Hold a second.","Lower slowly back to the starting position as you inhale.","Repeat for the prescribed reps."],
+  'overhead-press': ["Set a barbell at chest height on a rack and grip it just wider than shoulder width, palms forward.","Rest the bar on your collarbone, step back with feet shoulder width apart.","Press the bar overhead, locking out your arms — this is your starting position.","Lower the bar slowly back to your collarbone as you inhale.","Press back up to the starting position as you exhale.","Repeat for the prescribed reps."],
+  'lateral-raises': ["Stand holding a dumbbell in each hand at your sides, palms facing you — this is your starting position.","Keeping your torso still, raise the dumbbells out to the sides with a slight elbow bend until arms are parallel to the floor. Exhale and pause a second at the top.","Lower slowly back to your sides as you inhale.","Repeat for the prescribed reps."],
+  'skull-crushers': ["Lie on a bench holding an EZ bar with a close grip, arms perpendicular to the floor — this is your starting position.","Keeping upper arms stationary, lower the bar toward your forehead by bending the elbows, inhaling as you go.","Extend the elbows to press the bar back up as you exhale.","Repeat for the prescribed reps."],
+  'deadlift': ["Stand in front of a loaded barbell.","Keeping your back straight, bend your knees and grasp the bar with a shoulder-width overhand grip — this is your starting position.","Push through your legs and straighten your torso to lift the bar, exhaling as you rise. Stick your chest out at the top.","Lower back down by bending the knees and hips, keeping the back straight, until the plates touch the floor.","Repeat for the prescribed reps."],
+  'pull-up': ["Grab the pull-up bar with palms facing forward at your chosen grip width.","Hang with arms extended, torso tilted back slightly, chest out — this is your starting position.","Pull your torso up until the bar reaches your upper chest, exhaling and squeezing your back.","Lower slowly back to a full hang as you inhale.","Repeat for the prescribed reps."],
+  'dips': ["Support yourself on parallel bars with arms locked — this is your starting position.","Inhale and lower yourself slowly, torso leaning forward, elbows flared slightly, until you feel a chest stretch.","Push back up to the starting position as you exhale, squeezing your chest at the top.","Repeat for the prescribed reps."],
+  'farmers-carry': ["Stand between two heavy dumbbells or handles.","Grip them and lift by driving through your heels, keeping your back straight and head up.","Walk with short, quick steps for the target distance, breathing steadily."]
+};
+
+function imgPathForStep(base, step) { return base.replace(/0\.jpg$/, step + '.jpg'); }
+
+function renderImgInWrap(wrap, path, alt) {
+  const slot = wrap.querySelector('.img-slot');
   const img = document.createElement('img');
-  img.src = IMAGE_BASE + imgPath;
-  img.alt = card.querySelector('.ex-name').textContent;
-  img.onload = () => { wrap.innerHTML = ''; wrap.appendChild(img); const c=document.createElement('div');c.className='img-credit';c.textContent='free-exercise-db CC0';wrap.appendChild(c); };
-  img.onerror = () => showFallback(wrap, card.querySelector('.ex-name').textContent);
+  img.src = IMAGE_BASE + path;
+  img.alt = alt;
+  img.onload = () => {
+    slot.innerHTML = '';
+    slot.appendChild(img);
+    const c = document.createElement('div'); c.className = 'img-credit'; c.textContent = 'free-exercise-db CC0';
+    slot.appendChild(c);
+  };
+  img.onerror = () => { slot.innerHTML = `<div class="img-error"><span style="font-size:28px">🏋️</span><span>${alt}</span></div>`; };
 }
 
-function showFallback(wrap, name) {
-  wrap.innerHTML = `<div class="img-error"><span style="font-size:28px">🏋️</span><span>${name}</span></div>`;
+function loadCardImage(card) {
+  const wrap = card.querySelector('.ex-img-wrap');
+  if (!wrap) return;
+  renderImgInWrap(wrap, imgPathForStep(wrap.dataset.imgBase, wrap.dataset.step || '0'), card.querySelector('.ex-name').textContent);
+}
+
+function flipStep(key) {
+  const card = document.querySelector(`.ex-card[data-ex-key="${key}"]`);
+  if (!card) return;
+  const wrap = card.querySelector('.ex-img-wrap');
+  const newStep = wrap.dataset.step === '0' ? '1' : '0';
+  wrap.dataset.step = newStep;
+  renderImgInWrap(wrap, imgPathForStep(wrap.dataset.imgBase, newStep), card.querySelector('.ex-name').textContent);
+  wrap.querySelectorAll('.step-dot').forEach(d => d.classList.toggle('active', d.dataset.dot === newStep));
 }
 
 function loadVisibleImages() {
-  document.querySelectorAll('.ex-card[data-img]').forEach(card => {
-    const wrap = card.querySelector('.ex-img-wrap');
-    if (wrap && wrap.querySelector('.img-loading')) {
-      loadExerciseImage(card);
-    }
+  document.querySelectorAll('#tab-weekly [id^="ex-"]').forEach(dayEl => {
+    if (dayEl.style.display === 'none') return;
+    dayEl.querySelectorAll('.ex-card').forEach(card => {
+      const wrap = card.querySelector('.ex-img-wrap');
+      if (wrap && !wrap.dataset.loaded) {
+        wrap.dataset.loaded = '1';
+        loadCardImage(card);
+      }
+    });
   });
+}
+
+// ---- date helpers ----
+function todayISO() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+function formatDateShort(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ---- storage ----
+function getChecklist() { try { return JSON.parse(localStorage.getItem('wk_checklist')) || {}; } catch (e) { return {}; } }
+function saveChecklist(obj) {
+  const cutoff = Date.now() - 60 * 24 * 60 * 60 * 1000;
+  Object.keys(obj).forEach(date => { if (new Date(date).getTime() < cutoff) delete obj[date]; });
+  localStorage.setItem('wk_checklist', JSON.stringify(obj));
+}
+function isDoneToday(key) { const c = getChecklist(); return !!(c[todayISO()] && c[todayISO()][key]); }
+
+function getLogs() { try { return JSON.parse(localStorage.getItem('wk_logs')) || {}; } catch (e) { return {}; } }
+function saveLogs(obj) { localStorage.setItem('wk_logs', JSON.stringify(obj)); }
+
+function getMilestones() { try { return JSON.parse(localStorage.getItem('wk_milestones')) || []; } catch (e) { return []; } }
+function saveMilestones(arr) { localStorage.setItem('wk_milestones', JSON.stringify(arr)); }
+
+// ---- daily checklist ----
+function toggleDone(key) {
+  const card = document.querySelector(`.ex-card[data-ex-key="${key}"]`);
+  if (!card) return;
+  const checklist = getChecklist();
+  const today = todayISO();
+  checklist[today] = checklist[today] || {};
+  const newState = !checklist[today][key];
+  if (newState) checklist[today][key] = true; else delete checklist[today][key];
+  saveChecklist(checklist);
+  card.classList.toggle('done', newState);
+  card.querySelector('.ex-check').classList.toggle('done', newState);
+  const dayId = card.closest('[data-day-list]');
+  if (dayId) updateDayProgress(dayId.dataset.dayList);
+}
+
+function updateDayProgress(dayId) {
+  const list = document.querySelector(`[data-day-list="${dayId}"]`);
+  const el = document.querySelector(`[data-day-progress="${dayId}"]`);
+  if (!list || !el) return;
+  const total = list.querySelectorAll('.ex-card').length;
+  const done = list.querySelectorAll('.ex-card.done').length;
+  el.textContent = total ? `${done}/${total} done today` : '';
+}
+
+// ---- set logging ----
+function logSet(key) {
+  const wEl = document.getElementById('log-weight-' + key);
+  const rEl = document.getElementById('log-reps-' + key);
+  const weight = parseFloat(wEl.value);
+  const reps = parseInt(rEl.value, 10);
+  if (!weight || !reps) { wEl.focus(); return; }
+  const logs = getLogs();
+  logs[key] = logs[key] || [];
+  logs[key].push({ date: todayISO(), weight, reps });
+  saveLogs(logs);
+  wEl.value = ''; rEl.value = '';
+  updateLastLogged(key);
+}
+
+function updateLastLogged(key) {
+  const logs = (getLogs()[key] || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+  const lastEl = document.querySelector(`[data-last-for="${key}"]`);
+  const histEl = document.getElementById('log-history-' + key);
+  if (!logs.length) {
+    if (lastEl) lastEl.textContent = '';
+    if (histEl) histEl.innerHTML = '';
+    return;
+  }
+  if (lastEl) lastEl.textContent = `Last: ${logs[0].weight}kg × ${logs[0].reps} (${formatDateShort(logs[0].date)})`;
+  if (histEl) histEl.innerHTML = logs.slice(0, 5).map(l => `<div><span>${l.weight}kg × ${l.reps}</span><span>${formatDateShort(l.date)}</span></div>`).join('');
+}
+
+function toggleLogPanel(key) {
+  const panel = document.getElementById('log-' + key);
+  if (!panel) return;
+  panel.hidden = !panel.hidden;
+  if (!panel.hidden) updateLastLogged(key);
+}
+
+// ---- rest timer ----
+const TIMERS = {};
+function formatTime(sec) {
+  sec = Math.max(0, Math.round(sec));
+  return `${Math.floor(sec / 60)}:${(sec % 60).toString().padStart(2, '0')}`;
+}
+function updateTimerDisplay(key) {
+  const t = TIMERS[key];
+  const el = document.getElementById('timer-display-' + key);
+  if (el && t) el.textContent = formatTime(t.remaining);
+}
+function toggleTimerPanel(key) {
+  const panel = document.getElementById('timer-' + key);
+  if (!panel) return;
+  panel.hidden = !panel.hidden;
+  if (!panel.hidden && !TIMERS[key]) {
+    const card = document.querySelector(`.ex-card[data-ex-key="${key}"]`);
+    const rest = parseInt(card.dataset.rest, 10) || 60;
+    TIMERS[key] = { remaining: rest, total: rest, running: false, intervalId: null };
+    updateTimerDisplay(key);
+  }
+}
+function startPauseTimer(key) {
+  const t = TIMERS[key];
+  if (!t) return;
+  const btn = document.getElementById('timer-btn-' + key);
+  if (t.running) {
+    clearInterval(t.intervalId);
+    t.running = false;
+    if (btn) btn.textContent = 'Start';
+    return;
+  }
+  t.running = true;
+  if (btn) btn.textContent = 'Pause';
+  t.intervalId = setInterval(() => {
+    t.remaining -= 1;
+    updateTimerDisplay(key);
+    if (t.remaining <= 0) {
+      clearInterval(t.intervalId);
+      t.running = false;
+      if (btn) btn.textContent = 'Start';
+      onTimerDone(key);
+    }
+  }, 1000);
+}
+function resetTimer(key) {
+  const t = TIMERS[key];
+  if (!t) return;
+  clearInterval(t.intervalId);
+  t.running = false;
+  t.remaining = t.total;
+  updateTimerDisplay(key);
+  const btn = document.getElementById('timer-btn-' + key);
+  if (btn) btn.textContent = 'Start';
+}
+function adjustTimer(key, delta) {
+  const t = TIMERS[key];
+  if (!t) return;
+  t.remaining = Math.max(0, t.remaining + delta);
+  t.total = Math.max(t.total, t.remaining);
+  updateTimerDisplay(key);
+}
+function onTimerDone(key) {
+  const panel = document.getElementById('timer-' + key);
+  if (panel) { panel.classList.remove('flash'); void panel.offsetWidth; panel.classList.add('flash'); }
+  playBeep();
+}
+function playBeep() {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new Ctx();
+    [0, 0.25, 0.5].forEach(delay => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + delay + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.18);
+      o.start(ctx.currentTime + delay);
+      o.stop(ctx.currentTime + delay + 0.2);
+    });
+  } catch (e) {}
+}
+
+// ---- milestones ----
+function bestWeight(key) {
+  const logs = getLogs()[key] || [];
+  return logs.length ? Math.max(...logs.map(l => l.weight)) : 0;
+}
+function populateMilestoneDropdown() {
+  const sel = document.getElementById('ms-exercise');
+  if (!sel || sel.dataset.filled) return;
+  sel.dataset.filled = '1';
+  sel.innerHTML = EXERCISES.map(ex => `<option value="${ex.key}">${ex.name}</option>`).join('');
+}
+function addMilestone() {
+  const sel = document.getElementById('ms-exercise');
+  const weightEl = document.getElementById('ms-weight');
+  const dateEl = document.getElementById('ms-date');
+  const targetWeight = parseFloat(weightEl.value);
+  if (!sel.value || !targetWeight) { weightEl.focus(); return; }
+  const milestones = getMilestones();
+  milestones.push({ id: Date.now().toString(36), exKey: sel.value, targetWeight, targetDate: dateEl.value || null });
+  saveMilestones(milestones);
+  weightEl.value = ''; dateEl.value = '';
+  renderMilestones();
+}
+function deleteMilestone(id) {
+  saveMilestones(getMilestones().filter(m => m.id !== id));
+  renderMilestones();
+}
+function renderMilestones() {
+  const list = document.getElementById('milestone-list');
+  if (!list) return;
+  const milestones = getMilestones();
+  if (!milestones.length) { list.innerHTML = '<div class="empty-note">No milestones yet — add a target weight for any lift above.</div>'; return; }
+  list.innerHTML = milestones.map(m => {
+    const ex = EXERCISES.find(e => e.key === m.exKey);
+    const name = ex ? ex.name : m.exKey;
+    const barColor = ex ? `var(--${ex.statColor.replace('c-', '')})` : 'var(--arms)';
+    const best = bestWeight(m.exKey);
+    const dateStr = m.targetDate ? ` · by ${formatDateShort(m.targetDate)}` : '';
+    if (!best) {
+      return `<div class="milestone-card"><div class="milestone-top"><div class="milestone-title">${name} — ${m.targetWeight}kg</div><button class="milestone-del" onclick="deleteMilestone('${m.id}')">✕</button></div><div class="milestone-meta">Log a set on ${name} to start tracking${dateStr}</div></div>`;
+    }
+    const pct = Math.min(100, Math.round((best / m.targetWeight) * 100));
+    return `<div class="milestone-card"><div class="milestone-top"><div class="milestone-title">${name} — ${m.targetWeight}kg</div><button class="milestone-del" onclick="deleteMilestone('${m.id}')">✕</button></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${barColor}"></div></div><div class="milestone-meta">${best}kg / ${m.targetWeight}kg · ${pct}%${dateStr}</div></div>`;
+  }).join('');
+}
+function renderActivity() {
+  const list = document.getElementById('activity-list');
+  if (!list) return;
+  const logs = getLogs();
+  const all = [];
+  Object.keys(logs).forEach(key => logs[key].forEach(l => all.push({ key, ...l })));
+  all.sort((a, b) => b.date.localeCompare(a.date));
+  const recent = all.slice(0, 15);
+  if (!recent.length) { list.innerHTML = '<div class="empty-note">No sets logged yet.</div>'; return; }
+  list.innerHTML = recent.map(l => {
+    const ex = EXERCISES.find(e => e.key === l.key);
+    return `<div class="activity-item"><span>${ex ? ex.name : l.key} — ${l.weight}kg × ${l.reps}</span><span>${formatDateShort(l.date)}</span></div>`;
+  }).join('');
+}
+
+// ---- card rendering ----
+function renderCard(ex) {
+  const done = isDoneToday(ex.key);
+  const steps = (EXERCISE_STEPS[ex.key] || []).map(s => `<li>${s}</li>`).join('');
+  return `<div class="ex-card ${done ? 'done' : ''}" data-ex-key="${ex.key}" data-rest="${ex.rest}">
+    <div class="ex-img-wrap" data-img-base="${ex.img}" data-step="0">
+      <div class="img-slot"><div class="img-loading">⏳</div></div>
+      <button class="step-arrow prev" onclick="flipStep('${ex.key}')" aria-label="Previous step">‹</button>
+      <button class="step-arrow next" onclick="flipStep('${ex.key}')" aria-label="Next step">›</button>
+      <div class="step-dots"><span class="step-dot active" data-dot="0"></span><span class="step-dot" data-dot="1"></span></div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-card-top">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-top-right">
+          <span class="ex-badge ${ex.badgeClass}">${ex.badge}</span>
+          <button class="ex-check ${done ? 'done' : ''}" onclick="toggleDone('${ex.key}')" aria-label="Mark done today">✓</button>
+        </div>
+      </div>
+      <div class="ex-stats">
+        <div class="ex-stat"><div class="ex-stat-val ${ex.statColor}">${ex.sets}</div><div class="ex-stat-lbl">Sets</div></div>
+        <div class="ex-stat"><div class="ex-stat-val ${ex.statColor}">${ex.reps}</div><div class="ex-stat-lbl">${ex.repsLabel || 'Reps'}</div></div>
+        <div class="ex-stat"><div class="ex-stat-val ${ex.statColor}">${ex.rest}s</div><div class="ex-stat-lbl">Rest</div></div>
+      </div>
+      <div class="ex-tip">${ex.tip}</div>
+      <ol class="ex-steps">${steps}</ol>
+      <div class="ex-last" data-last-for="${ex.key}"></div>
+      <div class="ex-actions">
+        <button class="ex-action-btn" onclick="toggleTimerPanel('${ex.key}')">⏱ Rest</button>
+        <button class="ex-action-btn" onclick="toggleLogPanel('${ex.key}')">+ Log set</button>
+      </div>
+      <div class="timer-panel" id="timer-${ex.key}" hidden>
+        <div class="timer-display" id="timer-display-${ex.key}">${formatTime(ex.rest)}</div>
+        <div class="timer-adjust"><button onclick="adjustTimer('${ex.key}',-15)">−15s</button><button onclick="adjustTimer('${ex.key}',15)">+15s</button></div>
+        <div class="timer-controls"><button class="primary" id="timer-btn-${ex.key}" onclick="startPauseTimer('${ex.key}')">Start</button><button onclick="resetTimer('${ex.key}')">Reset</button></div>
+      </div>
+      <div class="log-panel" id="log-${ex.key}" hidden>
+        <div class="log-form">
+          <input type="number" placeholder="Weight (kg)" id="log-weight-${ex.key}" min="0" step="0.5"/>
+          <input type="number" placeholder="Reps" id="log-reps-${ex.key}" min="1" step="1"/>
+          <button onclick="logSet('${ex.key}')">Log</button>
+        </div>
+        <div class="log-history" id="log-history-${ex.key}"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAllDays() {
+  ['chest', 'legs', 'arms', 'full'].forEach(day => {
+    const container = document.querySelector(`[data-day-list="${day}"]`);
+    if (!container) return;
+    container.innerHTML = EXERCISES.filter(e => e.day === day).map(renderCard).join('');
+    updateDayProgress(day);
+  });
+  EXERCISES.forEach(ex => updateLastLogged(ex.key));
 }
 
 function showTab(name, el) {
@@ -450,6 +646,7 @@ function showTab(name, el) {
   document.getElementById('tab-' + name).classList.add('active');
   if (el) el.classList.add('active');
   if (name === 'weekly') loadVisibleImages();
+  if (name === 'progress') { populateMilestoneDropdown(); renderMilestones(); renderActivity(); }
 }
 
 function showDay(day, el) {
@@ -463,8 +660,13 @@ function showDay(day, el) {
   if (t) { t.style.display = 'block'; loadVisibleImages(); }
 }
 
-// Load images for default visible day on startup
-window.addEventListener('load', () => loadVisibleImages());
+window.addEventListener('load', () => {
+  renderAllDays();
+  loadVisibleImages();
+  populateMilestoneDropdown();
+  renderMilestones();
+  renderActivity();
+});
 </script>
 </body>
 </html>
