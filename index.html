@@ -139,6 +139,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .bmi-row{display:flex;align-items:center;gap:10px;margin-top:10px}
 .bmi-value{font-size:24px;font-weight:700}
 .bmi-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+.week-check{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;cursor:pointer}
+.week-check.done{border-color:#5db87a;background:rgba(93,184,122,.08)}
+.week-check-box{width:26px;height:26px;border-radius:8px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;color:transparent;background:var(--surface)}
+.week-check.done .week-check-box{background:#5db87a;border-color:#5db87a;color:#0f0f0f}
+.week-check-title{font-size:14px;font-weight:600}
+.week-check-sub{font-size:12px;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body>
@@ -193,24 +199,40 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 
       <div id="ex-chest">
         <div class="ex-section-label" id="section-label-chest">Chest, Triceps & Abs · Day 1</div>
+        <div class="week-check" id="week-check-wrap-chest" onclick="toggleDayDone('chest')">
+          <div class="week-check-box" id="week-check-chest"></div>
+          <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-chest"></div></div>
+        </div>
         <div class="day-progress" data-day-progress="chest"></div>
         <div class="ex-card-list" data-day-list="chest"></div>
       </div>
 
       <div id="ex-legs" style="display:none">
         <div class="ex-section-label" id="section-label-legs">Legs & Glutes · Day 2</div>
+        <div class="week-check" id="week-check-wrap-legs" onclick="toggleDayDone('legs')">
+          <div class="week-check-box" id="week-check-legs"></div>
+          <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-legs"></div></div>
+        </div>
         <div class="day-progress" data-day-progress="legs"></div>
         <div class="ex-card-list" data-day-list="legs"></div>
       </div>
 
       <div id="ex-arms" style="display:none">
         <div class="ex-section-label" id="section-label-arms">Back, Biceps & Shoulders · Day 4</div>
+        <div class="week-check" id="week-check-wrap-arms" onclick="toggleDayDone('arms')">
+          <div class="week-check-box" id="week-check-arms"></div>
+          <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-arms"></div></div>
+        </div>
         <div class="day-progress" data-day-progress="arms"></div>
         <div class="ex-card-list" data-day-list="arms"></div>
       </div>
 
       <div id="ex-full" style="display:none">
         <div class="ex-section-label" id="section-label-full">Full Body & Core · Day 5</div>
+        <div class="week-check" id="week-check-wrap-full" onclick="toggleDayDone('full')">
+          <div class="week-check-box" id="week-check-full"></div>
+          <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-full"></div></div>
+        </div>
         <div class="day-progress" data-day-progress="full"></div>
         <div class="ex-card-list" data-day-list="full"></div>
       </div>
@@ -680,7 +702,9 @@ function openLoginOverlay(isInitial) {
   document.getElementById('login-error').textContent = '';
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
-  document.getElementById('login-skip').style.display = isInitial ? '' : 'none';
+  const skipBtn = document.getElementById('login-skip');
+  skipBtn.style.display = isInitial ? '' : 'none';
+  skipBtn.textContent = getProfile() ? 'Continue to app' : 'Continue without an account';
   document.getElementById('login-overlay').hidden = false;
 }
 function closeLoginOverlay() { document.getElementById('login-overlay').hidden = true; }
@@ -732,6 +756,7 @@ function collectLocalState() {
     checklist: getChecklist(),
     milestones: getMilestones(),
     weightlog: getWeightLog(),
+    daydone: getDayDone(),
     updatedAt: Date.now()
   };
 }
@@ -742,6 +767,7 @@ function applyCloudState(data) {
   if (data.checklist) saveChecklist(data.checklist);
   if (data.milestones) saveMilestones(data.milestones);
   if (data.weightlog) saveWeightLog(data.weightlog);
+  if (data.daydone) saveDayDone(data.daydone);
   const profile = getProfile();
   document.getElementById('onboard-overlay').hidden = true;
   closeLoginOverlay();
@@ -854,6 +880,7 @@ function applyBodyType(bt) {
   if (whyEl) whyEl.textContent = BODY_GUIDES[bt].muscleWhy;
   renderBodyGuide();
   renderAllDays();
+  renderAllWeekChecks();
   loadVisibleImages();
   populateMilestoneDropdown();
   renderMilestones();
@@ -950,6 +977,44 @@ function updateDayProgress(dayId) {
   const done = list.querySelectorAll('.ex-card.done').length;
   el.textContent = total ? `${done}/${total} done today` : '';
 }
+
+// ---- weekly day-completion checkbox (7-day rolling reset) ----
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+function getDayDone() { try { return JSON.parse(localStorage.getItem('wk_daydone')) || {}; } catch (e) { return {}; } }
+function saveDayDone(obj) { localStorage.setItem('wk_daydone', JSON.stringify(obj)); syncToCloud(); }
+
+function isDayDoneThisWeek(slot) {
+  const entry = getDayDone()[slot];
+  return !!(entry && entry.checkedAt && (Date.now() - entry.checkedAt) < WEEK_MS);
+}
+
+function toggleDayDone(slot) {
+  const d = getDayDone();
+  if (isDayDoneThisWeek(slot)) delete d[slot];
+  else d[slot] = { checkedAt: Date.now() };
+  saveDayDone(d);
+  renderWeekCheck(slot);
+}
+
+function renderWeekCheck(slot) {
+  const wrapEl = document.getElementById('week-check-wrap-' + slot);
+  const boxEl = document.getElementById('week-check-' + slot);
+  const subEl = document.getElementById('week-check-sub-' + slot);
+  if (!wrapEl || !boxEl) return;
+  const done = isDayDoneThisWeek(slot);
+  wrapEl.classList.toggle('done', done);
+  boxEl.textContent = done ? '✓' : '';
+  if (subEl) {
+    if (done) {
+      const daysAgo = Math.floor((Date.now() - getDayDone()[slot].checkedAt) / (24 * 60 * 60 * 1000));
+      subEl.textContent = daysAgo <= 0 ? 'Completed today — resets in 7 days, or tap to undo' : `Completed ${daysAgo} day${daysAgo > 1 ? 's' : ''} ago — resets in ${7 - daysAgo} day${7 - daysAgo === 1 ? '' : 's'}, or tap to undo`;
+    } else {
+      subEl.textContent = 'Not done this week yet — tap once you finish this session';
+    }
+  }
+}
+
+function renderAllWeekChecks() { ['chest', 'legs', 'arms', 'full'].forEach(renderWeekCheck); }
 
 // ---- set logging ----
 function logSet(key) {
@@ -1216,11 +1281,8 @@ window.addEventListener('load', () => {
   document.getElementById('onboard-height').addEventListener('input', checkOnboardReady);
   document.getElementById('onboard-weight').addEventListener('input', checkOnboardReady);
   const profile = getProfile();
-  if (!profile) {
-    openLoginOverlay(true);
-    return;
-  }
-  applyBodyType(profile.bodyType);
+  if (profile) applyBodyType(profile.bodyType);
+  openLoginOverlay(true);
 });
 </script>
 </body>
