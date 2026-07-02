@@ -159,6 +159,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .bmi-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
 .week-check{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;cursor:pointer}
 .week-check.done{border-color:#5db87a;background:rgba(93,184,122,.08)}
+.week-check.partial{border-color:#e8b34a;background:rgba(232,179,74,.08)}
+.week-check.partial .week-check-box{background:#e8b34a;border-color:#e8b34a;color:#0f0f0f}
 .week-check-box{width:26px;height:26px;border-radius:8px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;color:transparent;background:var(--surface)}
 .week-check.done .week-check-box{background:#5db87a;border-color:#5db87a;color:#0f0f0f}
 .week-check-title{font-size:14px;font-weight:600}
@@ -1268,7 +1270,11 @@ function toggleDone(key) {
   card.classList.toggle('done', newState);
   card.querySelector('.ex-check').classList.toggle('done', newState);
   const dayId = card.closest('[data-day-list]');
-  if (dayId) updateDayProgress(dayId.dataset.dayList);
+  if (dayId) {
+    updateDayProgress(dayId.dataset.dayList);
+    maybeUpgradeDayDone(dayId.dataset.dayList);
+    renderWeekCheck(dayId.dataset.dayList);
+  }
 }
 
 function updateDayProgress(dayId) {
@@ -1300,13 +1306,39 @@ function isDayDoneThisWeek(slot) {
   return !!(entry && entry.checkedAt && (Date.now() - entry.checkedAt) < WEEK_MS);
 }
 
+// How many of a day's exercises are checked off today
+function dayExerciseProgress(slot) {
+  const list = document.querySelector(`[data-day-list="${slot}"]`);
+  if (!list) return { done: 0, total: 0 };
+  return { done: list.querySelectorAll('.ex-card.done').length, total: list.querySelectorAll('.ex-card').length };
+}
+
 function toggleDayDone(slot) {
   const d = getDayDone();
-  if (isDayDoneThisWeek(slot)) delete d[slot];
-  else d[slot] = { checkedAt: Date.now() };
+  if (isDayDoneThisWeek(slot)) {
+    delete d[slot];
+  } else {
+    const p = dayExerciseProgress(slot);
+    d[slot] = { checkedAt: Date.now(), partial: p.done < p.total };
+  }
   saveDayDone(d);
   renderWeekCheck(slot);
   renderWeekProgress();
+}
+
+// If a partial day (marked today) later has all its exercises checked, promote it to a full completion
+function maybeUpgradeDayDone(slot) {
+  const d = getDayDone();
+  const entry = d[slot];
+  if (!entry || !entry.partial || !isDayDoneThisWeek(slot)) return;
+  const markedToday = (Date.now() - entry.checkedAt) < 24 * 60 * 60 * 1000;
+  const p = dayExerciseProgress(slot);
+  if (markedToday && p.total > 0 && p.done === p.total) {
+    entry.partial = false;
+    saveDayDone(d);
+    renderWeekCheck(slot);
+    renderWeekProgress();
+  }
 }
 
 function renderWeekCheck(slot) {
@@ -1315,14 +1347,24 @@ function renderWeekCheck(slot) {
   const subEl = document.getElementById('week-check-sub-' + slot);
   if (!wrapEl || !boxEl) return;
   const done = isDayDoneThisWeek(slot);
-  wrapEl.classList.toggle('done', done);
-  boxEl.textContent = done ? '✓' : '';
+  const entry = done ? getDayDone()[slot] : null;
+  const partial = !!(entry && entry.partial);
+  wrapEl.classList.toggle('done', done && !partial);
+  wrapEl.classList.toggle('partial', done && partial);
+  boxEl.textContent = done ? (partial ? '◐' : '✓') : '';
   if (subEl) {
     if (done) {
-      const daysAgo = Math.floor((Date.now() - getDayDone()[slot].checkedAt) / (24 * 60 * 60 * 1000));
-      subEl.textContent = daysAgo <= 0 ? 'Completed today — resets in 7 days, or tap to undo' : `Completed ${daysAgo} day${daysAgo > 1 ? 's' : ''} ago — resets in ${7 - daysAgo} day${7 - daysAgo === 1 ? '' : 's'}, or tap to undo`;
+      const daysAgo = Math.floor((Date.now() - entry.checkedAt) / (24 * 60 * 60 * 1000));
+      const when = daysAgo <= 0 ? 'today' : `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
+      const resetIn = daysAgo <= 0 ? 'resets in 7 days' : `resets in ${7 - daysAgo} day${7 - daysAgo === 1 ? '' : 's'}`;
+      subEl.textContent = partial
+        ? `Partial session ${when} (not all exercises were checked) — ${resetIn}, or tap to undo`
+        : `Completed ${when} — ${resetIn}, or tap to undo`;
     } else {
-      subEl.textContent = 'Not done this week yet — tap once you finish this session';
+      const p = dayExerciseProgress(slot);
+      subEl.textContent = p.done >= p.total && p.total > 0
+        ? 'All exercises checked — tap to complete this session'
+        : `Check off the exercises below (${p.done}/${p.total}), or tap now to log a partial session`;
     }
   }
 }
@@ -1337,9 +1379,11 @@ function renderWeekProgress() {
   const fillEl = document.getElementById('week-progress-fill');
   if (!countEl || !fillEl) return;
   const ids = planDayIds();
-  const done = ids.filter(isDayDoneThisWeek).length;
-  countEl.textContent = `${done}/${ids.length} days`;
-  fillEl.style.width = (done / ids.length * 100) + '%';
+  const dayDone = getDayDone();
+  const done = ids.filter(isDayDoneThisWeek);
+  const partials = done.filter(id => dayDone[id] && dayDone[id].partial).length;
+  countEl.textContent = `${done.length}/${ids.length} days${partials ? ` (${partials} partial)` : ''}`;
+  fillEl.style.width = (done.length / ids.length * 100) + '%';
 }
 
 // ---- set logging ----
