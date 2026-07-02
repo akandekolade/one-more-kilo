@@ -12,7 +12,7 @@
 :root {
   --bg: #0f0f0f; --surface: #1a1a1a; --card: #222; --border: rgba(255,255,255,0.08);
   --text: #f0ede8; --muted: #888780;
-  --chest: #e87a50; --arms: #4a8fd4; --legs: #5db87a; --full: #9b7fe8;
+  --chest: #e87a50; --arms: #4a8fd4; --legs: #5db87a; --full: #9b7fe8; --back: #4fc3c9; --core: #e8b34a;
   --safe-top: env(safe-area-inset-top,0px); --safe-bottom: env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -72,6 +72,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .badge-full{background:rgba(155,127,232,.15);color:var(--full)}
 .badge-tri{background:rgba(232,122,80,.1);color:#e87a50}
 .badge-sh{background:rgba(93,184,122,.1);color:#5db87a}
+.badge-back{background:rgba(79,195,201,.15);color:var(--back)}
+.badge-core{background:rgba(232,179,74,.15);color:var(--core)}
 .img-credit{position:absolute;bottom:4px;right:6px;font-size:9px;color:rgba(255,255,255,.25)}
 .ex-top-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:8px}
 .ex-check{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);background:none;color:var(--muted);font-size:13px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
@@ -130,13 +132,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <div class="day-chip active" style="--active-color:var(--chest)" onclick="showDay('chest',this)"><div class="day-num">Day 1</div><div class="day-name">Chest & Tris</div><div class="day-dot"></div></div>
         <div class="day-chip" style="--active-color:var(--legs)" onclick="showDay('legs',this)"><div class="day-num">Day 2</div><div class="day-name">Legs</div><div class="day-dot"></div></div>
         <div class="day-chip rest-chip"><div class="day-num">Day 3</div><div class="day-name">Rest</div><div class="day-dot" style="background:var(--muted)"></div></div>
-        <div class="day-chip" style="--active-color:var(--arms)" onclick="showDay('arms',this)"><div class="day-num">Day 4</div><div class="day-name">Arms & Delts</div><div class="day-dot"></div></div>
+        <div class="day-chip" style="--active-color:var(--arms)" onclick="showDay('arms',this)"><div class="day-num">Day 4</div><div class="day-name">Back & Arms</div><div class="day-dot"></div></div>
         <div class="day-chip" style="--active-color:var(--full)" onclick="showDay('full',this)"><div class="day-num">Day 5</div><div class="day-name">Full Body</div><div class="day-dot"></div></div>
         <div class="day-chip rest-chip"><div class="day-num">Day 6–7</div><div class="day-name">Rest</div><div class="day-dot" style="background:var(--muted)"></div></div>
       </div>
 
       <div id="ex-chest">
-        <div class="ex-section-label">Chest & Triceps · Day 1</div>
+        <div class="ex-section-label">Chest, Triceps & Abs · Day 1</div>
         <div class="day-progress" data-day-progress="chest"></div>
         <div class="ex-card-list" data-day-list="chest"></div>
       </div>
@@ -148,13 +150,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       </div>
 
       <div id="ex-arms" style="display:none">
-        <div class="ex-section-label">Arms & Shoulders · Day 4</div>
+        <div class="ex-section-label">Back, Biceps & Shoulders · Day 4</div>
         <div class="day-progress" data-day-progress="arms"></div>
         <div class="ex-card-list" data-day-list="arms"></div>
       </div>
 
       <div id="ex-full" style="display:none">
-        <div class="ex-section-label">Full Body Power · Day 5</div>
+        <div class="ex-section-label">Full Body & Core · Day 5</div>
         <div class="day-progress" data-day-progress="full"></div>
         <div class="ex-card-list" data-day-list="full"></div>
       </div>
@@ -217,6 +219,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     </div>
 
     <div id="tab-tips" class="section">
+      <div class="section-heading">Your first 4 weeks</div>
+      <div class="info-card"><div class="info-title">Week 1 — Learn the moves</div><div class="info-body">You're brand new, so weight doesn't matter yet — form does. Use light weight (something you could do 15+ reps with) and stop each set 2-3 reps before it gets hard. Use the step-by-step photos and cues on every exercise. Missing a day is fine; missing good form isn't.</div></div>
+      <div class="info-card"><div class="info-title">Week 2 — Build the habit</div><div class="info-body">Same weights as week 1, but now push each set closer to failure (1-2 reps left in the tank). Focus on showing up for all 4 sessions and getting used to the rest timer and full routine — consistency matters more than intensity right now.</div></div>
+      <div class="info-card"><div class="info-title">Week 3 — Start adding weight</div><div class="info-body">For any lift where you hit all sets at the top of the rep range last week, add a small jump (2.5-5kg, or the next plate/pin) this week. Log every set in the app so you can see it happening.</div></div>
+      <div class="info-card"><div class="info-title">Week 4 — Full progressive overload</div><div class="info-body">Follow the plan's listed sets/reps/rest as written from here on. The rule going forward: whenever you complete every set at the top of a rep range, add weight next session. This is also a good week to set your first milestones from the Progress tab.</div></div>
+      <div style="height:8px"></div>
       <div class="section-heading">Ectomorph guide</div>
       <div class="progress-row"><div class="progress-label"><span>Calorie surplus</span><span>+400–600 kcal/day</span></div><div class="prog-track"><div class="prog-fill" style="width:75%;background:#4a8fd4"></div></div></div>
       <div class="progress-row"><div class="progress-label"><span>Protein target</span><span>1.6–2g per kg</span></div><div class="prog-track"><div class="prog-fill" style="width:85%;background:#5db87a"></div></div></div>
@@ -266,6 +274,7 @@ const EXERCISES = [
   { key:'cable-chest-fly', day:'chest', name:'Cable chest fly', badge:'Isolation', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'12–15', rest:60, tip:'Control the stretch on the return. Slight elbow bend. Builds the inner chest line.', img:'Flat_Bench_Cable_Flyes/0.jpg' },
   { key:'close-grip-bench-press', day:'chest', name:'Close-grip bench press', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'8–10', rest:75, tip:'Grip just inside shoulder width, elbows tucked. Triceps make up 2/3 of arm size.', img:'Close-Grip_Barbell_Bench_Press/0.jpg' },
   { key:'tricep-pushdown', day:'chest', name:'Tricep pushdown', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'12–15', rest:60, tip:'Full extension every rep. Spread the rope at the bottom for full lateral head activation.', img:'Triceps_Pushdown/0.jpg' },
+  { key:'cable-crunch', day:'chest', name:'Cable crunch', badge:'Abs', badgeClass:'badge-core', statColor:'c-chest', sets:3, reps:'15–20', rest:45, tip:'Round your spine, not your hips — the crunch comes from your abs, not your arms pulling the rope down.', img:'Cable_Crunch/0.jpg' },
 
   { key:'barbell-back-squat', day:'legs', name:'Barbell back squat', badge:'Primary', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'5–7', rest:120, tip:'Break parallel. Brace your core hard. The king of mass builders for ectomorphs.', img:'Barbell_Squat/0.jpg' },
   { key:'romanian-deadlift', day:'legs', name:'Romanian deadlift', badge:'Hamstrings', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8–10', rest:90, tip:'Hinge at hips, soft knees. Feel the hamstring stretch before driving back up.', img:'Romanian_Deadlift/0.jpg' },
@@ -273,6 +282,8 @@ const EXERCISES = [
   { key:'walking-lunges', day:'legs', name:'Walking lunges', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10 each', rest:60, tip:'Torso upright, front knee tracks over toe. Builds symmetry and glute size.', img:'Bodyweight_Walking_Lunge/0.jpg' },
   { key:'standing-calf-raise', day:'legs', name:'Standing calf raise', badge:'Calves', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'15–20', rest:45, tip:'Full range of motion. Hold at the top 1 second. Calves respond to high reps.', img:'Standing_Calf_Raises/0.jpg' },
 
+  { key:'lat-pulldown', day:'arms', name:'Lat pulldown', badge:'Back width', badgeClass:'badge-back', statColor:'c-arms', sets:4, reps:'8–10', rest:90, tip:'Pull to your upper chest, lead with the elbows, avoid leaning back excessively. Builds the back width that makes your waist look smaller.', img:'Wide-Grip_Lat_Pulldown/0.jpg' },
+  { key:'seated-cable-row', day:'arms', name:'Seated cable row', badge:'Back thickness', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'10–12', rest:75, tip:'Chest up, pull to your stomach, squeeze your shoulder blades together at the end of every rep.', img:'Seated_Cable_Rows/0.jpg' },
   { key:'barbell-curl', day:'arms', name:'Barbell curl', badge:'Biceps', badgeClass:'badge-arms', statColor:'c-arms', sets:4, reps:'8–10', rest:75, tip:'Elbows fixed at sides. Full extension at the bottom. Go heavy — biceps need progressive overload.', img:'Barbell_Curl/0.jpg' },
   { key:'incline-dumbbell-curl', day:'arms', name:'Incline dumbbell curl', badge:'Long head', badgeClass:'badge-arms', statColor:'c-arms', sets:3, reps:'10–12', rest:60, tip:'Incline gives a longer stretch. Hold the peak squeeze 1 second. Builds the bicep peak.', img:'Incline_Dumbbell_Curl/0.jpg' },
   { key:'overhead-press', day:'arms', name:'Overhead press', badge:'Shoulders', badgeClass:'badge-sh', statColor:'c-arms', sets:4, reps:'6–8', rest:90, tip:'Press from chin height. Lock out fully. Broad shoulders make arms look significantly bigger.', img:'Standing_Military_Press/0.jpg' },
@@ -282,7 +293,9 @@ const EXERCISES = [
   { key:'deadlift', day:'full', name:'Deadlift', badge:'King lift', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'4–6', rest:120, tip:'Flat back, chest up, push the floor away. Recruits the entire body — ultimate ectomorph mass builder.', img:'Barbell_Deadlift/0.jpg' },
   { key:'pull-up', day:'full', name:'Pull-up', badge:'Back width', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'6–10', rest:90, tip:'Full hang at bottom, chin over bar at top. Builds lats that make your body look much larger.', img:'Pullups/0.jpg' },
   { key:'dips', day:'full', name:'Dips', badge:'Chest + tris', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'8–10', rest:75, tip:'Lean forward for more chest. Add weight belt once bodyweight becomes easy.', img:'Dips_-_Chest_Version/0.jpg' },
-  { key:'farmers-carry', day:'full', name:"Farmer's carry", badge:'Functional', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'30m', repsLabel:'Distance', rest:60, tip:'Heavy dumbbells, tall posture. Builds forearms, traps, and core simultaneously.', img:'Farmers_Walk/0.jpg' }
+  { key:'farmers-carry', day:'full', name:"Farmer's carry", badge:'Functional', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'30m', repsLabel:'Distance', rest:60, tip:'Heavy dumbbells, tall posture. Builds forearms, traps, and core simultaneously.', img:'Farmers_Walk/0.jpg' },
+  { key:'hanging-leg-raise', day:'full', name:'Hanging leg raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:45, tip:'Curl your pelvis up at the top, control the descent, avoid swinging on the bar.', img:'Hanging_Leg_Raise/0.jpg' },
+  { key:'plank', day:'full', name:'Plank', badge:'Core', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'45–60s', repsLabel:'Hold', rest:45, tip:"Straight line from head to heels, brace like you're about to be punched.", img:'Plank/0.jpg' }
 ];
 
 // Written form cues per exercise, sourced from the free-exercise-db (CC0) dataset
@@ -305,7 +318,12 @@ const EXERCISE_STEPS = {
   'deadlift': ["Stand in front of a loaded barbell.","Keeping your back straight, bend your knees and grasp the bar with a shoulder-width overhand grip — this is your starting position.","Push through your legs and straighten your torso to lift the bar, exhaling as you rise. Stick your chest out at the top.","Lower back down by bending the knees and hips, keeping the back straight, until the plates touch the floor.","Repeat for the prescribed reps."],
   'pull-up': ["Grab the pull-up bar with palms facing forward at your chosen grip width.","Hang with arms extended, torso tilted back slightly, chest out — this is your starting position.","Pull your torso up until the bar reaches your upper chest, exhaling and squeezing your back.","Lower slowly back to a full hang as you inhale.","Repeat for the prescribed reps."],
   'dips': ["Support yourself on parallel bars with arms locked — this is your starting position.","Inhale and lower yourself slowly, torso leaning forward, elbows flared slightly, until you feel a chest stretch.","Push back up to the starting position as you exhale, squeezing your chest at the top.","Repeat for the prescribed reps."],
-  'farmers-carry': ["Stand between two heavy dumbbells or handles.","Grip them and lift by driving through your heels, keeping your back straight and head up.","Walk with short, quick steps for the target distance, breathing steadily."]
+  'farmers-carry': ["Stand between two heavy dumbbells or handles.","Grip them and lift by driving through your heels, keeping your back straight and head up.","Walk with short, quick steps for the target distance, breathing steadily."],
+  'cable-crunch': ["Kneel below a high pulley with a rope attachment and grasp the rope, lowering it until your hands are next to your face.","Flex your hips slightly, letting the weight extend your lower back — this is your starting position.","Keeping your hips stationary, flex at the waist and contract your abs so your elbows travel toward your thighs, exhaling as you go. Hold a second.","Slowly return to the starting position as you inhale, keeping constant tension on the abs.","Repeat for the prescribed reps."],
+  'lat-pulldown': ["Sit at a pulldown machine with a wide bar attached, knee pad adjusted to your height.","Grab the bar with palms facing forward, wider than shoulder width.","Lean your torso back around 30 degrees, chest out — this is your starting position.","Breathing out, pull the bar down until it touches your upper chest, driving the elbows down and back.","Hold a second, squeezing your shoulder blades together, then raise the bar slowly back up as you inhale.","Repeat for the prescribed reps."],
+  'seated-cable-row': ["Sit at a low pulley row machine with a V-bar, feet on the platform, knees slightly bent.","Lean forward and grab the handles with your back straight.","Pull back until your torso is upright and slightly arched, chest out — this is your starting position.","Keeping your torso still, pull the handles to your torso, exhaling and squeezing your back hard. Hold a second.","Slowly return to the starting position as you inhale.","Repeat for the prescribed reps."],
+  'hanging-leg-raise': ["Hang from a pull-up bar with arms extended, legs straight down — this is your starting position.","Raise your legs until your torso and legs form a 90-degree angle, exhaling as you go. Hold a second.","Lower slowly back to the starting position as you inhale.","Repeat for the prescribed reps."],
+  'plank': ["Get into a prone position supported on your toes and forearms, elbows directly below your shoulders.","Keep your body in a straight line and hold the position for the prescribed time."]
 };
 
 function imgPathForStep(base, step) { return base.replace(/0\.jpg$/, step + '.jpg'); }
