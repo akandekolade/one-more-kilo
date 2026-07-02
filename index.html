@@ -603,7 +603,7 @@ const PLANS = {
     4: [
       { chip:'Chest & Tris', label:'Chest, Triceps & Abs', color:'chest', ex:['barbell-bench-press','incline-dumbbell-press','cable-chest-fly','close-grip-bench-press','tricep-pushdown','cable-crunch'] },
       { chip:'Legs', label:'Legs & Glutes', color:'legs', ex:['barbell-back-squat','romanian-deadlift','leg-press','walking-lunges','standing-calf-raise'] },
-      { chip:'Back & Arms', label:'Back, Biceps & Shoulders', color:'arms', ex:['lat-pulldown','seated-cable-row','barbell-curl','incline-dumbbell-curl','overhead-press','lateral-raises','skull-crushers'] },
+      { chip:'Back & Arms', label:'Back, Arms & Shoulders', color:'arms', ex:['lat-pulldown','seated-cable-row','barbell-curl','incline-dumbbell-curl','overhead-press','lateral-raises','skull-crushers'] },
       { chip:'Full Body', label:'Full Body & Core', color:'full', ex:['deadlift','pull-up','dips','farmers-carry','hanging-leg-raise','plank'] }
     ],
     5: [
@@ -682,7 +682,7 @@ const PLANS = {
       { chip:'Lower A', label:'Lower A', color:'legs', ex:['goblet-squat','dumbbell-rdl','standing-dumbbell-calf-raise','glute-bridge'] },
       { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['kettlebell-thruster','renegade-row','stationary-rowing','air-bike'] },
       { chip:'Upper B', label:'Upper B', color:'arms', ex:['dumbbell-flyes','one-arm-dumbbell-row','arnold-press','dumbbell-bicep-curl'] },
-      { chip:'Lower B', label:'Lower B & Back', color:'full', ex:['dumbbell-lunges','dumbbell-step-ups','superman','lying-leg-raise'] },
+      { chip:'Lower B', label:'Lower B & Core', color:'full', ex:['dumbbell-lunges','dumbbell-step-ups','superman','lying-leg-raise'] },
       { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['treadmill-jog','plank-endo','crunches','reverse-crunch'] }
     ],
     7: [
@@ -690,7 +690,7 @@ const PLANS = {
       { chip:'Lower A', label:'Lower A', color:'legs', ex:['goblet-squat','dumbbell-rdl','standing-dumbbell-calf-raise','glute-bridge'] },
       { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['kettlebell-thruster','renegade-row','stationary-rowing','air-bike'] },
       { chip:'Upper B', label:'Upper B', color:'arms', ex:['dumbbell-flyes','one-arm-dumbbell-row','arnold-press','dumbbell-bicep-curl'] },
-      { chip:'Lower B', label:'Lower B & Back', color:'full', ex:['dumbbell-lunges','dumbbell-step-ups','superman','lying-leg-raise'] },
+      { chip:'Lower B', label:'Lower B & Core', color:'full', ex:['dumbbell-lunges','dumbbell-step-ups','superman','lying-leg-raise'] },
       { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['treadmill-jog','plank-endo','crunches','reverse-crunch'] },
       { chip:'Recovery', label:'Recovery Walk & Mobility', color:'core', ex:['treadmill-walk','elliptical','cat-stretch','hamstring-calf-stretch'] }
     ]
@@ -921,8 +921,26 @@ function openLoginOverlay(isInitial) {
 function closeLoginOverlay() { document.getElementById('login-overlay').hidden = true; }
 
 function skipLogin() {
+  // Existing users (or devices that already passed the gate) go straight through
+  if (getProfile() || localStorage.getItem('wk_invite_ok')) {
+    closeLoginOverlay();
+    if (!getProfile()) document.getElementById('onboard-overlay').hidden = false;
+    return;
+  }
+  const wrap = document.getElementById('login-invite-wrap');
+  const errEl = document.getElementById('login-error');
+  if (wrap.hidden) {
+    wrap.hidden = false;
+    errEl.textContent = 'Guests need the invite code too — answer the riddle above to continue.';
+    document.getElementById('login-invite').focus();
+    return;
+  }
+  const invite = document.getElementById('login-invite').value.trim().toLowerCase();
+  if (invite !== INVITE_CODE) { errEl.textContent = 'Invalid invite code.'; return; }
+  localStorage.setItem('wk_invite_ok', '1');
+  errEl.textContent = '';
   closeLoginOverlay();
-  if (!getProfile()) document.getElementById('onboard-overlay').hidden = false;
+  document.getElementById('onboard-overlay').hidden = false;
 }
 
 function toggleAuthMode() {
@@ -1553,22 +1571,53 @@ function renderCard(ex) {
 
 function planDayIds() { return currentPlan().map((_, i) => 'd' + (i + 1)); }
 
+// How each plan length maps onto a 7-day calendar week: numbers are training-day
+// indexes (1-based into the plan array), 'R' is a rest day.
+const WEEK_LAYOUTS = {
+  4: [1, 2, 'R', 3, 4, 'R', 'R'],
+  5: [1, 2, 3, 'R', 4, 5, 'R'],
+  6: [1, 2, 3, 4, 5, 6, 'R'],
+  7: [1, 2, 3, 4, 5, 6, 7]
+};
+
+// Calendar day number (1-7) for a given training-day index
+function calendarDayFor(trainIdx) {
+  const layout = WEEK_LAYOUTS[getDaysPerWeek()];
+  return layout.indexOf(trainIdx) + 1;
+}
+
 function renderPlan() {
   const plan = currentPlan();
+  const layout = WEEK_LAYOUTS[plan.length] || plan.map((_, i) => i + 1);
   const chipsEl = document.getElementById('day-scroll');
   const sectionsEl = document.getElementById('day-sections');
   if (!chipsEl || !sectionsEl) return;
 
-  chipsEl.innerHTML = plan.map((day, i) => {
-    const id = 'd' + (i + 1);
-    return `<div class="day-chip ${i === 0 ? 'active' : ''}" style="--active-color:var(--${day.color})" onclick="showDay('${id}',this)"><div class="day-num">Day ${i + 1}</div><div class="day-name">${day.chip}</div><div class="day-dot"></div></div>`;
-  }).join('') + (plan.length < 7 ? `<div class="day-chip rest-chip"><div class="day-num">Day ${plan.length + 1}–7</div><div class="day-name">Rest</div><div class="day-dot" style="background:var(--muted)"></div></div>` : '');
+  let chips = '';
+  let firstDone = false;
+  for (let c = 0; c < layout.length; c++) {
+    if (layout[c] === 'R') {
+      // merge consecutive rest days into one chip (e.g. "Day 6–7")
+      let end = c;
+      while (end + 1 < layout.length && layout[end + 1] === 'R') end++;
+      const dayLabel = end > c ? `Day ${c + 1}–${end + 1}` : `Day ${c + 1}`;
+      chips += `<div class="day-chip rest-chip"><div class="day-num">${dayLabel}</div><div class="day-name">Rest</div><div class="day-dot" style="background:var(--muted)"></div></div>`;
+      c = end;
+    } else {
+      const i = layout[c] - 1;
+      const day = plan[i];
+      const id = 'd' + (i + 1);
+      chips += `<div class="day-chip ${!firstDone ? 'active' : ''}" style="--active-color:var(--${day.color})" onclick="showDay('${id}',this)"><div class="day-num">Day ${c + 1}</div><div class="day-name">${day.chip}</div><div class="day-dot"></div></div>`;
+      firstDone = true;
+    }
+  }
+  chipsEl.innerHTML = chips;
 
   sectionsEl.innerHTML = plan.map((day, i) => {
     const id = 'd' + (i + 1);
     const cards = day.ex.map(k => EXERCISES.find(e => e.key === k)).filter(Boolean).map(renderCard).join('');
     return `<div id="ex-${id}" ${i === 0 ? '' : 'style="display:none"'}>
-      <div class="ex-section-label">${day.label} · Day ${i + 1}</div>
+      <div class="ex-section-label">${day.label} · Day ${calendarDayFor(i + 1)}</div>
       <div class="week-check" id="week-check-wrap-${id}" onclick="toggleDayDone('${id}')">
         <div class="week-check-box" id="week-check-${id}"></div>
         <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-${id}"></div></div>
