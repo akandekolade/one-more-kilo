@@ -167,16 +167,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 <div class="onboard-overlay" id="login-overlay" hidden>
   <div class="onboard-title" id="login-title">Welcome back</div>
   <div class="onboard-sub" id="login-sub">Log in to restore your data, or start fresh on this device.</div>
-  <div class="onboard-form">
+  <form class="onboard-form" id="login-form" onsubmit="return handleAuthSubmit(event)" autocomplete="on">
     <label for="login-email">Email</label>
-    <input type="email" id="login-email" placeholder="you@example.com"/>
+    <input type="email" id="login-email" name="email" autocomplete="username" placeholder="you@example.com"/>
     <label for="login-password">Password</label>
-    <input type="password" id="login-password" placeholder="Password"/>
-    <button id="login-submit" onclick="submitAuth()">Log in</button>
+    <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Password"/>
+    <button type="submit" id="login-submit">Log in</button>
     <div class="info-body" id="login-error" style="margin-top:8px;color:#e87a50"></div>
-    <button class="link-btn" id="login-mode-toggle" onclick="toggleAuthMode()">New here? Sign up instead</button>
-    <button class="link-btn muted" id="login-skip" onclick="skipLogin()">Continue without an account</button>
-  </div>
+    <button type="button" class="link-btn" id="login-mode-toggle" onclick="toggleAuthMode()">New here? Sign up instead</button>
+    <button type="button" class="link-btn muted" id="login-skip" onclick="skipLogin()">Continue without an account</button>
+  </form>
 </div>
 <div class="app">
   <div class="header">
@@ -383,6 +383,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 const db = firebase.firestore();
 let currentUser = null;
 let syncTimer = null;
@@ -728,6 +729,15 @@ function updateAuthModeUI() {
   document.getElementById('login-sub').textContent = isLogin ? 'Log in to restore your data, or start fresh on this device.' : 'Sign up to back up your data to the cloud so it survives reinstalling the app.';
   document.getElementById('login-submit').textContent = isLogin ? 'Log in' : 'Sign up';
   document.getElementById('login-mode-toggle').textContent = isLogin ? 'New here? Sign up instead' : 'Already have an account? Log in';
+  document.getElementById('login-password').autocomplete = isLogin ? 'current-password' : 'new-password';
+}
+
+// Submitting via a real <form> (rather than a plain button click) is what lets Safari/Chrome/Edge
+// offer to save the password and autofill it next time.
+function handleAuthSubmit(event) {
+  event.preventDefault();
+  submitAuth();
+  return false;
 }
 
 function submitAuth() {
