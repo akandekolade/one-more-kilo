@@ -385,6 +385,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       <div class="info-card">
         <div class="info-title">Body type: <span id="profile-bodytype-label"></span></div>
         <div class="info-body">Height: <span id="profile-height-label"></span> cm</div>
+        <div class="info-body">Weight: <span id="profile-weight-label">—</span></div>
         <div class="bmi-row">
           <div class="bmi-value" id="bmi-value">—</div>
           <span class="bmi-badge" id="bmi-badge"></span>
@@ -1040,8 +1041,13 @@ function updateProfileLabels() {
   if (!profile) return;
   const btLabel = document.getElementById('profile-bodytype-label');
   const hLabel = document.getElementById('profile-height-label');
+  const wLabel = document.getElementById('profile-weight-label');
   if (btLabel) btLabel.textContent = BODY_TYPE_NAMES[profile.bodyType] || profile.bodyType;
   if (hLabel) hLabel.textContent = profile.heightCm;
+  if (wLabel) {
+    const log = sortedWeightLog();
+    wLabel.textContent = log.length ? `${log[0].weight} kg (${formatDateShort(log[0].date)})` : '—';
+  }
   renderWeightHistory();
 }
 
@@ -1067,13 +1073,18 @@ function saveHeight() {
 }
 
 // ---- BMI ----
+// Newest first; for entries on the same date the one logged later wins
+function sortedWeightLog() {
+  return getWeightLog().map((l, i) => ({ ...l, idx: i })).sort((a, b) => b.date.localeCompare(a.date) || b.idx - a.idx);
+}
+
 function renderBMI() {
   const valEl = document.getElementById('bmi-value');
   const badgeEl = document.getElementById('bmi-badge');
   const noteEl = document.getElementById('bmi-note');
   if (!valEl || !badgeEl) return;
   const profile = getProfile();
-  const log = getWeightLog().slice().sort((a, b) => b.date.localeCompare(a.date));
+  const log = sortedWeightLog();
   if (!profile || !profile.heightCm || !log.length) {
     valEl.textContent = '—';
     badgeEl.textContent = '';
@@ -1110,13 +1121,13 @@ function logWeight() {
   log.push({ date: todayISO(), weight });
   saveWeightLog(log);
   el.value = '';
-  renderWeightHistory();
+  updateProfileLabels();
 }
 function renderWeightHistory() {
   const histEl = document.getElementById('weight-history');
   renderBMI();
   if (!histEl) return;
-  const log = getWeightLog().map((l, i) => ({ ...l, idx: i })).sort((a, b) => b.date.localeCompare(a.date));
+  const log = sortedWeightLog();
   if (!log.length) { histEl.innerHTML = ''; return; }
   histEl.innerHTML = log.slice(0, 5).map(l => `<div><span>${l.weight}kg</span><span>${formatDateShort(l.date)} <button class="milestone-del" onclick="deleteWeightEntry(${l.idx})" aria-label="Delete entry">✕</button></span></div>`).join('');
 }
@@ -1124,7 +1135,7 @@ function deleteWeightEntry(idx) {
   const log = getWeightLog();
   log.splice(idx, 1);
   saveWeightLog(log);
-  renderWeightHistory();
+  updateProfileLabels();
 }
 
 // ---- daily checklist ----
