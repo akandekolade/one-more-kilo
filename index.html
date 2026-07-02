@@ -1326,14 +1326,24 @@ function toggleDayDone(slot) {
   renderWeekProgress();
 }
 
-// If a partial day (marked today) later has all its exercises checked, promote it to a full completion
+// When all of a day's exercises are checked: promote a same-day partial to full,
+// or auto-mark the week session complete if it wasn't marked yet.
+// (Runs only when an exercise is toggled, so a manual uncheck of the session sticks
+// until the user interacts with the exercises again.)
 function maybeUpgradeDayDone(slot) {
+  const p = dayExerciseProgress(slot);
+  if (p.total === 0 || p.done < p.total) return;
   const d = getDayDone();
   const entry = d[slot];
-  if (!entry || !entry.partial || !isDayDoneThisWeek(slot)) return;
+  if (!entry || !isDayDoneThisWeek(slot)) {
+    d[slot] = { checkedAt: Date.now(), partial: false };
+    saveDayDone(d);
+    renderWeekCheck(slot);
+    renderWeekProgress();
+    return;
+  }
   const markedToday = (Date.now() - entry.checkedAt) < 24 * 60 * 60 * 1000;
-  const p = dayExerciseProgress(slot);
-  if (markedToday && p.total > 0 && p.done === p.total) {
+  if (entry.partial && markedToday) {
     entry.partial = false;
     saveDayDone(d);
     renderWeekCheck(slot);
