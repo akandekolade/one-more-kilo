@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="One more Kilo!"/>
 <meta name="theme-color" content="#0f0f0f" id="meta-theme-color"/>
-<title>One more Kilo!</title>
+<title>Progress — One more Kilo!</title>
 <script>
 // Runs before CSS paints so there's no flash of the wrong theme
 (function () {
@@ -23,19 +23,15 @@
 <body>
 <div class="app">
   <div class="header">
-    <div><h1>One more Kilo!</h1><div class="header-sub" id="header-sub">Ectomorph mass builder</div></div>
+    <div><h1>Progress</h1><div class="header-sub" id="header-sub">Ectomorph mass builder</div></div>
     <div class="header-account" id="header-account">
       <button class="header-account-btn" id="header-account-btn" onclick="headerAccountClick()">Log in</button>
     </div>
   </div>
   <div class="scroll">
-    <div class="section active" id="tab-weekly">
-      <div class="info-card" style="margin-bottom:16px">
-        <div class="progress-label"><span>This week's training</span><span id="week-progress-count">0/4 days</span></div>
-        <div class="prog-track"><div class="prog-fill" id="week-progress-fill" style="width:0%;background:var(--primary)"></div></div>
-      </div>
-      <div class="day-scroll" id="day-scroll"></div>
-      <div id="day-sections"></div>
+    <div class="section active">
+      <div class="section-heading" style="margin-top:8px">Recent activity</div>
+      <div id="activity-list"></div>
     </div>
   </div>
 </div>

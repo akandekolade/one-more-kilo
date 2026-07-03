@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="One more Kilo!"/>
+<meta name="theme-color" content="#0f0f0f" id="meta-theme-color"/>
+<title>Profile — One more Kilo!</title>
+<script>
+// Runs before CSS paints so there's no flash of the wrong theme
+(function () {
+  var mode = localStorage.getItem('wk_thememode') || 'auto';
+  var accent = localStorage.getItem('wk_accent') || 'green';
+  var effective = mode === 'auto' ? ((window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark') : mode;
+  document.documentElement.setAttribute('data-theme', effective);
+  document.documentElement.setAttribute('data-accent', accent);
+})();
+</script>
+<link rel="stylesheet" href="css/app.css"/>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div><h1>Profile</h1><div class="header-sub" id="header-sub">Ectomorph mass builder</div></div>
+    <div class="header-account" id="header-account">
+      <button class="header-account-btn" id="header-account-btn" onclick="headerAccountClick()">Log in</button>
+    </div>
+  </div>
+  <div class="scroll">
+    <div class="section active">
+      <div class="section-heading">Account</div>
+      <div class="info-card">
+        <div id="account-status-signed-out">
+          <div class="info-body">Not backed up to the cloud yet.</div>
+          <div class="ex-actions" style="margin-top:10px"><button class="ex-action-btn" onclick="headerAccountClick()">Log in / Sign up</button></div>
+        </div>
+        <div id="account-status-signed-in" hidden>
+          <div class="info-title">Signed in as <span id="account-email"></span></div>
+          <div class="info-body" id="sync-status">Synced</div>
+          <div class="ex-actions" style="margin-top:10px"><button class="ex-action-btn" onclick="logOut()">Log out</button></div>
+        </div>
+      </div>
+
+      <div class="section-heading" style="margin-top:8px">Appearance</div>
+      <div class="info-card">
+        <div class="seg-label" style="margin-top:0">Color mode</div>
+        <div class="seg" id="seg-mode">
+          <button data-mode="light" onclick="setThemeMode('light')">Light</button>
+          <button data-mode="dark" onclick="setThemeMode('dark')">Dark</button>
+          <button data-mode="auto" onclick="setThemeMode('auto')">Auto</button>
+        </div>
+        <div class="seg-label">Accent</div>
+        <div class="seg" id="seg-accent">
+          <button data-accent="green" onclick="setAccent('green')">Green</button>
+          <button data-accent="contrast" onclick="setAccent('contrast')">Contrast</button>
+        </div>
+      </div>
+
+      <div class="section-heading" style="margin-top:8px">Profile</div>
+      <div class="info-card">
+        <div class="info-title">Body type: <span id="profile-bodytype-label"></span></div>
+        <div class="info-body">Plan: <span id="profile-days-label"></span> days/week</div>
+        <div class="info-body">Height: <span id="profile-height-label"></span> cm</div>
+        <div class="info-body">Weight: <span id="profile-weight-label">—</span></div>
+        <div class="bmi-row">
+          <div class="bmi-value" id="bmi-value">—</div>
+          <span class="bmi-badge" id="bmi-badge"></span>
+        </div>
+        <div class="info-body" id="bmi-note" style="margin-top:4px"></div>
+        <div class="ex-actions" style="margin-top:12px">
+          <button class="ex-action-btn" onclick="openBodyTypePicker()">Switch plan</button>
+          <button class="ex-action-btn" onclick="toggleHeightPanel()">Edit height</button>
+          <button class="ex-action-btn" onclick="toggleWeightPanel()">+ Log weight</button>
+        </div>
+        <div class="log-panel" id="height-edit-panel" hidden>
+          <div class="log-form">
+            <input type="number" placeholder="Height (cm)" id="height-input" min="100" max="250"/>
+            <button onclick="saveHeight()">Save</button>
+          </div>
+        </div>
+        <div class="log-panel" id="weight-log-panel" hidden>
+          <div class="log-form">
+            <input type="number" placeholder="Weight (kg)" id="weight-input" min="1" step="0.1"/>
+            <button onclick="logWeight()">Log</button>
+          </div>
+          <div class="log-history" id="weight-history"></div>
+        </div>
+      </div>
+
+      <div class="section-heading" style="margin-top:8px">Milestones</div>
+      <div class="add-milestone-form">
+        <label for="ms-exercise">Exercise</label>
+        <select id="ms-exercise"></select>
+        <label for="ms-weight">Target weight (kg)</label>
+        <input type="number" id="ms-weight" min="1" step="0.5" placeholder="e.g. 100"/>
+        <label for="ms-date">Target date (optional)</label>
+        <input type="date" id="ms-date"/>
+        <button onclick="addMilestone()">+ Add milestone</button>
+      </div>
+      <div id="milestone-list"></div>
+      <div class="section-heading">Muscle map</div>
+      <svg class="muscle-svg" viewBox="0 0 260 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Front and back muscle diagram">
+        <text x="65" y="14" font-size="10" fill="#888780" text-anchor="middle" font-family="sans-serif">Front</text>
+        <text x="195" y="14" font-size="10" fill="#888780" text-anchor="middle" font-family="sans-serif">Back</text>
+        <g fill="#2a2a2a" stroke="#444" stroke-width="1">
+          <ellipse cx="65" cy="34" rx="15" ry="17"/><rect x="47" y="49" width="36" height="46" rx="7"/>
+          <rect x="25" y="51" width="20" height="50" rx="7"/><rect x="83" y="51" width="20" height="50" rx="7"/>
+          <rect x="51" y="93" width="15" height="50" rx="6"/><rect x="67" y="93" width="15" height="50" rx="6"/>
+          <rect x="51" y="141" width="15" height="52" rx="6"/><rect x="67" y="141" width="15" height="52" rx="6"/>
+          <rect x="51" y="191" width="15" height="44" rx="6"/><rect x="67" y="191" width="15" height="44" rx="6"/>
+        </g>
+        <rect x="48" y="50" width="34" height="40" rx="7" fill="#e87a50" opacity=".8"/>
+        <rect x="26" y="52" width="18" height="36" rx="6" fill="#4a8fd4" opacity=".8"/>
+        <rect x="84" y="52" width="18" height="36" rx="6" fill="#4a8fd4" opacity=".8"/>
+        <rect x="26" y="86" width="18" height="13" rx="5" fill="#4a8fd4" opacity=".4"/>
+        <rect x="84" y="86" width="18" height="13" rx="5" fill="#4a8fd4" opacity=".4"/>
+        <rect x="52" y="94" width="13" height="46" rx="5" fill="#5db87a" opacity=".8"/>
+        <rect x="68" y="94" width="13" height="46" rx="5" fill="#5db87a" opacity=".8"/>
+        <rect x="52" y="192" width="13" height="40" rx="5" fill="#5db87a" opacity=".45"/>
+        <rect x="68" y="192" width="13" height="40" rx="5" fill="#5db87a" opacity=".45"/>
+        <g fill="#2a2a2a" stroke="#444" stroke-width="1">
+          <ellipse cx="195" cy="34" rx="15" ry="17"/><rect x="177" y="49" width="36" height="46" rx="7"/>
+          <rect x="155" y="51" width="20" height="50" rx="7"/><rect x="213" y="51" width="20" height="50" rx="7"/>
+          <rect x="181" y="93" width="15" height="50" rx="6"/><rect x="197" y="93" width="15" height="50" rx="6"/>
+          <rect x="181" y="141" width="15" height="52" rx="6"/><rect x="197" y="141" width="15" height="52" rx="6"/>
+          <rect x="181" y="191" width="15" height="44" rx="6"/><rect x="197" y="191" width="15" height="44" rx="6"/>
+        </g>
+        <rect x="178" y="50" width="34" height="40" rx="7" fill="#9b7fe8" opacity=".8"/>
+        <rect x="156" y="52" width="18" height="46" rx="6" fill="#4a8fd4" opacity=".7"/>
+        <rect x="214" y="52" width="18" height="46" rx="6" fill="#4a8fd4" opacity=".7"/>
+        <rect x="182" y="142" width="13" height="48" rx="5" fill="#5db87a" opacity=".8"/>
+        <rect x="198" y="142" width="13" height="48" rx="5" fill="#5db87a" opacity=".8"/>
+        <rect x="182" y="192" width="13" height="40" rx="5" fill="#5db87a" opacity=".45"/>
+        <rect x="198" y="192" width="13" height="40" rx="5" fill="#5db87a" opacity=".45"/>
+        <rect x="20" y="252" width="9" height="9" rx="2" fill="#e87a50"/>
+        <text x="33" y="261" font-size="10" fill="#888780" font-family="sans-serif">Chest</text>
+        <rect x="75" y="252" width="9" height="9" rx="2" fill="#4a8fd4"/>
+        <text x="88" y="261" font-size="10" fill="#888780" font-family="sans-serif">Arms</text>
+        <rect x="130" y="252" width="9" height="9" rx="2" fill="#5db87a"/>
+        <text x="143" y="261" font-size="10" fill="#888780" font-family="sans-serif">Legs</text>
+        <rect x="185" y="252" width="9" height="9" rx="2" fill="#9b7fe8"/>
+        <text x="198" y="261" font-size="10" fill="#888780" font-family="sans-serif">Back</text>
+      </svg>
+      <div class="info-card"><div class="info-title">Why these muscles?</div><div class="info-body" id="muscle-why-body">Chest adds width, arms add definition, and legs trigger the most whole-body anabolic growth. As an ectomorph these three groups give you the fastest visible results.</div></div>
+      <div class="info-card"><div class="info-title">Volume progression</div><div class="info-body">Start at the lower end of each rep range in week 1. Add one set to each major compound lift every 2 weeks. Increase weight when you can comfortably hit the top rep count for all sets.</div></div>
+      <div class="section-heading">Your first 4 weeks</div>
+      <div class="info-card"><div class="info-title">Week 1 — Learn the moves</div><div class="info-body">You're brand new, so weight doesn't matter yet — form does. Use light weight (something you could do 15+ reps with) and stop each set 2-3 reps before it gets hard. Use the step-by-step photos and cues on every exercise. Missing a day is fine; missing good form isn't.</div></div>
+      <div class="info-card"><div class="info-title">Week 2 — Build the habit</div><div class="info-body">Same weights as week 1, but now push each set closer to failure (1-2 reps left in the tank). Focus on showing up for all 4 sessions and getting used to the rest timer and full routine — consistency matters more than intensity right now.</div></div>
+      <div class="info-card"><div class="info-title">Week 3 — Start adding weight</div><div class="info-body">For any lift where you hit all sets at the top of the rep range last week, add a small jump (2.5-5kg, or the next plate/pin) this week. Log every set in the app so you can see it happening.</div></div>
+      <div class="info-card"><div class="info-title">Week 4 — Full progressive overload</div><div class="info-body">Follow the plan's listed sets/reps/rest as written from here on. The rule going forward: whenever you complete every set at the top of a rep range, add weight next session. This is also a good week to set your first milestones from the Progress tab.</div></div>
+      <div style="height:8px"></div>
+      <div id="body-guide"></div>
+    </div>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/data.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/cloud.js"></script>
+<script src="js/overlays.js"></script>
+<script src="js/profileui.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/plan.js"></script>
+<script src="js/init.js"></script>
+</body>
+</html>

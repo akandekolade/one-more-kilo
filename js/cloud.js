@@ -1,0 +1,194 @@
+// Firebase auth + Firestore cloud sync
+const firebaseConfig = {
+  apiKey: "AIzaSyAXVhQLLQDnm3tKL8kRc380CW-vEq8Q6_c",
+  authDomain: "one-more-kilo-d2498.firebaseapp.com",
+  projectId: "one-more-kilo-d2498",
+  storageBucket: "one-more-kilo-d2498.firebasestorage.app",
+  messagingSenderId: "467329163900",
+  appId: "1:467329163900:web:0d9794872ee8d74ce4dff9"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
+const db = firebase.firestore();
+let currentUser = null;
+let syncTimer = null;
+
+
+// ---- cloud backup (Firebase) ----
+let authMode = 'login';
+const INVITE_CODE = 'mellon'; // soft gate — this app is invite-only, ask the owner for the code. Change this string to change the code (compared lowercase, so case doesn't matter).
+
+function headerAccountClick() { if (!currentUser) openLoginOverlay(false); }
+
+function openLoginOverlay(isInitial) {
+  authMode = 'login';
+  updateAuthModeUI();
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-invite').value = '';
+  const skipBtn = document.getElementById('login-skip');
+  skipBtn.style.display = isInitial ? '' : 'none';
+  skipBtn.textContent = getProfile() ? 'Continue to app' : 'Continue without an account';
+  document.getElementById('login-overlay').hidden = false;
+}
+function closeLoginOverlay() { document.getElementById('login-overlay').hidden = true; sessionStorage.setItem('wk_entered', '1'); }
+
+// Validate the invite code against the serverless function when hosted on Netlify;
+// fall back to the local constant elsewhere (GitHub Pages, local file).
+async function checkInvite(guess) {
+  try {
+    const res = await fetch('/.netlify/functions/invite', { method: 'POST', body: JSON.stringify({ code: guess }) });
+    if (res.ok) { const j = await res.json(); return !!j.ok; }
+  } catch (e) {}
+  return guess.trim().toLowerCase() === INVITE_CODE;
+}
+
+async function skipLogin() {
+  // Existing users (or devices that already passed the gate) go straight through
+  if (getProfile() || localStorage.getItem('wk_invite_ok')) {
+    closeLoginOverlay();
+    if (!getProfile()) document.getElementById('onboard-overlay').hidden = false;
+    return;
+  }
+  const wrap = document.getElementById('login-invite-wrap');
+  const errEl = document.getElementById('login-error');
+  if (wrap.hidden) {
+    wrap.hidden = false;
+    errEl.textContent = 'Guests need the invite code too — answer the riddle above to continue.';
+    document.getElementById('login-invite').focus();
+    return;
+  }
+  const invite = document.getElementById('login-invite').value;
+  if (!(await checkInvite(invite))) { errEl.textContent = 'Invalid invite code.'; return; }
+  localStorage.setItem('wk_invite_ok', '1');
+  errEl.textContent = '';
+  closeLoginOverlay();
+  document.getElementById('onboard-overlay').hidden = false;
+}
+
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  updateAuthModeUI();
+}
+function updateAuthModeUI() {
+  const isLogin = authMode === 'login';
+  document.getElementById('login-title').textContent = isLogin ? 'Welcome back' : 'Create your account';
+  document.getElementById('login-sub').textContent = isLogin ? 'Log in to restore your data, or start fresh on this device.' : 'This app is invite-only — ask the owner for an invite code to sign up.';
+  document.getElementById('login-submit').textContent = isLogin ? 'Log in' : 'Sign up';
+  document.getElementById('login-mode-toggle').textContent = isLogin ? 'New here? Sign up instead' : 'Already have an account? Log in';
+  document.getElementById('login-password').autocomplete = isLogin ? 'current-password' : 'new-password';
+  document.getElementById('login-invite-wrap').hidden = isLogin;
+}
+
+// Submitting via a real <form> (rather than a plain button click) is what lets Safari/Chrome/Edge
+// offer to save the password and autofill it next time.
+function handleAuthSubmit(event) {
+  event.preventDefault();
+  submitAuth();
+  return false;
+}
+
+async function submitAuth() {
+  const email = document.getElementById('login-email').value.trim();
+  const pw = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.textContent = '';
+  if (!email || !pw) { errEl.textContent = 'Enter an email and password.'; return; }
+  if (authMode === 'signup') {
+    const invite = document.getElementById('login-invite').value;
+    if (!(await checkInvite(invite))) { errEl.textContent = 'Invalid invite code.'; return; }
+  }
+  const action = authMode === 'login' ? auth.signInWithEmailAndPassword(email, pw) : auth.createUserWithEmailAndPassword(email, pw);
+  action.catch(e => { errEl.textContent = e.message; });
+}
+function logOut() {
+  auth.signOut().then(() => {
+    ['wk_profile', 'wk_logs', 'wk_checklist', 'wk_milestones', 'wk_weightlog', 'wk_daydone'].forEach(k => localStorage.removeItem(k));
+    location.reload();
+  });
+}
+
+function renderHeaderAccount() {
+  const el = document.getElementById('header-account');
+  if (!el) return;
+  if (currentUser) {
+    el.innerHTML = `<div class="header-account-email">${currentUser.email}</div><button class="header-account-btn" onclick="logOut()">Log out</button>`;
+  } else {
+    el.innerHTML = `<button class="header-account-btn" onclick="headerAccountClick()">Log in</button>`;
+  }
+}
+
+function setSyncStatus(text) { const el = document.getElementById('sync-status'); if (el) el.textContent = text; }
+
+function collectLocalState() {
+  return {
+    profile: getProfile(),
+    logs: getLogs(),
+    checklist: getChecklist(),
+    milestones: getMilestones(),
+    weightlog: getWeightLog(),
+    daydone: getDayDone(),
+    updatedAt: Date.now()
+  };
+}
+
+function applyCloudState(data) {
+  if (data.profile) saveProfile(data.profile);
+  if (data.logs) saveLogs(data.logs);
+  if (data.checklist) saveChecklist(data.checklist);
+  if (data.milestones) saveMilestones(data.milestones);
+  if (data.weightlog) saveWeightLog(data.weightlog);
+  if (data.daydone) saveDayDone(data.daydone);
+  const profile = getProfile();
+  document.getElementById('onboard-overlay').hidden = true;
+  closeLoginOverlay();
+  if (profile) applyBodyType(profile.bodyType);
+}
+
+function pullFromCloud() {
+  if (!currentUser) return;
+  setSyncStatus('Syncing…');
+  db.collection('users').doc(currentUser.uid).get().then(doc => {
+    if (doc.exists) {
+      applyCloudState(doc.data());
+      setSyncStatus('Synced');
+    } else if (getProfile()) {
+      syncToCloudNow();
+    } else {
+      document.getElementById('onboard-overlay').hidden = false;
+    }
+  }).catch(() => setSyncStatus('Sync error — will retry'));
+}
+
+function syncToCloud() {
+  if (!currentUser) return;
+  clearTimeout(syncTimer);
+  setSyncStatus('Syncing…');
+  syncTimer = setTimeout(syncToCloudNow, 1500);
+}
+function syncToCloudNow() {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).set(collectLocalState(), { merge: true })
+    .then(() => setSyncStatus('Synced'))
+    .catch(() => setSyncStatus('Sync error — will retry'));
+}
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  renderHeaderAccount();
+  const outEl = document.getElementById('account-status-signed-out');
+  const inEl = document.getElementById('account-status-signed-in');
+  if (user) {
+    if (outEl) outEl.hidden = true;
+    if (inEl) inEl.hidden = false;
+    const emailEl = document.getElementById('account-email');
+    if (emailEl) emailEl.textContent = user.email;
+    closeLoginOverlay();
+    pullFromCloud();
+  } else {
+    if (outEl) outEl.hidden = false;
+    if (inEl) inEl.hidden = true;
+  }
+});
