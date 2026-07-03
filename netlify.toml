@@ -5,7 +5,14 @@
   functions = "netlify/functions"
 
 # Serve fresh HTML immediately after every deploy (no stale-cache delay)
+# plus browser security hardening. script-src needs 'unsafe-inline' because the
+# app uses inline onclick handlers and the flash-free theme snippet.
 [[headers]]
   for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://www.googleapis.com; img-src 'self' data: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src https://one-more-kilo-d2498.firebaseapp.com; object-src 'none'; base-uri 'self'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=()"

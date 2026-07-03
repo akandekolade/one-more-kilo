@@ -123,8 +123,8 @@ function renderHeaderAccount() {
     // Email + logout live on the Profile page only; the header shows an avatar shortcut
     const profile = getProfile();
     const initial = ((profile && profile.name) || currentUser.email || '?')[0].toUpperCase();
-    const face = (profile && profile.photo) ? `<img src="${profile.photo}" alt=""/>` : initial;
-    el.innerHTML = `<a class="header-avatar" href="profile.html" aria-label="Profile">${face}</a>`;
+    const photoOk = profile && profile.photo && String(profile.photo).startsWith('data:image/');
+    el.innerHTML = `<a class="header-avatar" href="profile.html" aria-label="Profile">${photoOk ? `<img src="${profile.photo}" alt=""/>` : esc(initial)}</a>`;
   } else {
     el.innerHTML = `<button class="header-account-btn" onclick="headerAccountClick()">Log in</button>`;
   }

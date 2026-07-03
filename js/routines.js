@@ -75,7 +75,7 @@ function renderRoutinesPage() {
     const meta = r.type === 'daily' ? 'Daily · 1 session' : `Weekly · ${r.days.length} day${r.days.length > 1 ? 's' : ''}`;
     return `<div class="info-card routine-card">
       <div class="routine-info">
-        <div class="milestone-top"><div class="info-title">${r.name} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
+        <div class="milestone-top"><div class="info-title">${esc(r.name)} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
         <button class="milestone-del" onclick="deleteRoutine('${r.id}')" aria-label="Delete routine">✕</button></div>
         <div class="info-body">${meta} · ${r.days.reduce((n, d) => n + d.ex.length, 0)} exercises</div>
         <div class="ex-actions" style="margin-top:10px">
@@ -225,7 +225,7 @@ function renderBuilder() {
   el.innerHTML = `<div class="info-card">
     <div class="info-title">${b.id ? 'Edit routine' : 'New routine'}</div>
     <label class="seg-label">Name</label>
-    <input type="text" class="auth-input" value="${b.name.replace(/"/g, '&quot;')}" oninput="builderSetName(this.value)" placeholder="e.g. Push power, Saturday pump…"/>
+    <input type="text" class="auth-input" value="${esc(b.name)}" oninput="builderSetName(this.value)" placeholder="e.g. Push power, Saturday pump…"/>
     <label class="seg-label">Type</label>
     <div class="seg">
       <button class="${b.type === 'weekly' ? 'active' : ''}" onclick="setBuilderType('weekly')">Weekly</button>
@@ -234,7 +234,7 @@ function renderBuilder() {
     ${b.days.map((d, i) => `
       <div class="builder-day">
         <div class="milestone-top">
-          <input type="text" class="auth-input" style="margin-bottom:0" value="${(d.label || '').replace(/"/g, '&quot;')}" oninput="builderSetLabel(${i}, this.value)" placeholder="Day name"/>
+          <input type="text" class="auth-input" style="margin-bottom:0" value="${esc(d.label || '')}" oninput="builderSetLabel(${i}, this.value)" placeholder="Day name"/>
           ${b.type === 'weekly' && b.days.length > 1 ? `<button class="milestone-del" onclick="builderRemoveDay(${i})" aria-label="Remove day">✕</button>` : ''}
         </div>
         ${d.ex.map(k => { const ex = EXERCISES.find(e => e.key === k); return ex ? `
@@ -303,14 +303,14 @@ function openAddToPlan(key) {
   }
   const plan = currentPlan();
   const r = typeof activeRoutine === 'function' ? activeRoutine() : null;
-  const planName = r ? `“${r.name}”` : 'this week’s plan';
+  const planName = r ? `“${esc(r.name)}”` : 'this week’s plan';
   const planRows = plan.map((day, i) =>
-    `<button class="picker-row" onclick="addToPlanDay('${key}',${i})"><span>${day.label}</span><span class="picker-meta">Day ${i + 1}</span></button>`
+    `<button class="picker-row" onclick="addToPlanDay('${key}',${i})"><span>${esc(day.label)}</span><span class="picker-meta">Day ${i + 1}</span></button>`
   ).join('');
   const routines = getRoutines();
   const routineRows = routines.map(rt =>
     rt.days.map((day, i) =>
-      `<button class="picker-row" onclick="addToRoutineDay('${key}','${rt.id}',${i})"><span>${rt.name} — ${day.label}</span><span class="picker-meta">permanent</span></button>`
+      `<button class="picker-row" onclick="addToRoutineDay('${key}','${rt.id}',${i})"><span>${esc(rt.name)} — ${esc(day.label)}</span><span class="picker-meta">permanent</span></button>`
     ).join('')
   ).join('');
   el.innerHTML = `

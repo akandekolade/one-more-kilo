@@ -1,5 +1,10 @@
 // Date helpers + localStorage-backed state
 
+// Escape user-sourced text before it enters innerHTML templates
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // ---- date helpers ----
 function todayISO() {
   const d = new Date();

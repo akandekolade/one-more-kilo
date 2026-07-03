@@ -41,7 +41,7 @@ async function addGalleryPhoto(input) {
 function renderGallery() {
   const el = document.getElementById('gallery-list');
   if (!el) return;
-  const photos = getPhotos().slice().sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+  const photos = getPhotos().filter(p => String(p.data).startsWith('data:image/')).slice().sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
   if (!photos.length) {
     el.innerHTML = '<div class="empty-note">No progress photos yet — add your first one above. Same pose, same spot, every week or two works best.</div>';
     return;
@@ -59,7 +59,7 @@ function renderGallery() {
 
 function openPhotoViewer(id) {
   const photo = getPhotos().find(p => p.id === id);
-  if (!photo) return;
+  if (!photo || !String(photo.data).startsWith('data:image/')) return;
   let el = document.getElementById('photo-viewer');
   if (!el) {
     el = document.createElement('div');

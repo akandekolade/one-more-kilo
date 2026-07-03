@@ -18,14 +18,15 @@ function renderProfileHero() {
   const email = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.email : 'Not signed in';
   const name = profile.name || 'Your profile';
   const initial = (profile.name || '?')[0].toUpperCase();
-  const face = profile.photo ? `<img src="${profile.photo}" alt="Profile photo"/>` : initial;
+  const photoOk = profile.photo && String(profile.photo).startsWith('data:image/');
+  const face = photoOk ? `<img src="${profile.photo}" alt="Profile photo"/>` : esc(initial);
   el.innerHTML = `
     <label class="hero-avatar" title="Tap to change photo">${face}
       <span class="hero-cam">📷</span>
       <input type="file" accept="image/*" hidden onchange="setProfilePhoto(this)"/>
     </label>
-    <div class="hero-name">${name}</div>
-    <div class="hero-email">${email}</div>
+    <div class="hero-name">${esc(name)}</div>
+    <div class="hero-email">${esc(email)}</div>
     ${profile.photo ? '<button class="link-btn hero-remove" onclick="removeProfilePhoto()">Remove photo</button>' : ''}
     <div class="hero-stats">
       <div><b>${wlog.length ? wlog[0].weight + ' Kg' : '—'}</b><span>Weight</span></div>

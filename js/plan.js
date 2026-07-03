@@ -50,7 +50,7 @@ function renderPlan() {
       const i = layout[c] - 1;
       const day = plan[i];
       const id = 'd' + (i + 1);
-      chips += `<div class="day-chip ${!firstDone ? 'active' : ''}" style="--active-color:var(--${day.color})" onclick="showDay('${id}',this)"><div class="day-num">Day ${c + 1}</div><div class="day-name">${day.chip}</div><div class="day-dot"></div></div>`;
+      chips += `<div class="day-chip ${!firstDone ? 'active' : ''}" style="--active-color:var(--${day.color})" onclick="showDay('${id}',this)"><div class="day-num">Day ${c + 1}</div><div class="day-name">${esc(day.chip)}</div><div class="day-dot"></div></div>`;
       firstDone = true;
     }
   }
@@ -64,7 +64,7 @@ function renderPlan() {
       .map(e => EXERCISES.find(x => x.key === e.key)).filter(Boolean)
       .map(ex => `<div>${renderCard(ex)}<button class="link-btn muted" style="margin-top:-8px" onclick="removeExtra('${id}','${ex.key}')">Remove extra exercise ✕</button></div>`).join('');
     return `<div id="ex-${id}" ${i === 0 ? '' : 'style="display:none"'}>
-      <div class="ex-section-label">${day.label} · Day ${calendarDayFor(i + 1)}</div>
+      <div class="ex-section-label">${esc(day.label)} · Day ${calendarDayFor(i + 1)}</div>
       <div class="week-check" id="week-check-wrap-${id}" onclick="toggleDayDone('${id}')">
         <div class="week-check-box" id="week-check-${id}"></div>
         <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-${id}"></div></div>
