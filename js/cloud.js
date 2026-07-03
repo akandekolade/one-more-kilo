@@ -23,14 +23,12 @@ function headerAccountClick() { if (!currentUser) openLoginOverlay(false); }
 
 function openLoginOverlay(isInitial) {
   authMode = 'login';
+  document.getElementById('login-overlay').dataset.initial = isInitial ? '1' : '';
   updateAuthModeUI();
   document.getElementById('login-error').textContent = '';
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('login-invite').value = '';
-  const skipBtn = document.getElementById('login-skip');
-  skipBtn.style.display = isInitial ? '' : 'none';
-  skipBtn.textContent = getProfile() ? 'Continue to app' : 'Continue without an account';
   document.getElementById('login-overlay').hidden = false;
 }
 function closeLoginOverlay() { document.getElementById('login-overlay').hidden = true; sessionStorage.setItem('wk_entered', '1'); }
@@ -54,13 +52,14 @@ async function skipLogin() {
   }
   const wrap = document.getElementById('login-invite-wrap');
   const errEl = document.getElementById('login-error');
-  if (wrap.hidden) {
+  const inviteEl = document.getElementById('login-invite');
+  if (wrap.hidden || !inviteEl.value.trim()) {
     wrap.hidden = false;
     errEl.textContent = 'Guests need the invite code too — answer the riddle above to continue.';
-    document.getElementById('login-invite').focus();
+    inviteEl.focus();
     return;
   }
-  const invite = document.getElementById('login-invite').value;
+  const invite = inviteEl.value;
   if (!(await checkInvite(invite))) { errEl.textContent = 'Invalid invite code.'; return; }
   localStorage.setItem('wk_invite_ok', '1');
   errEl.textContent = '';
@@ -74,12 +73,17 @@ function toggleAuthMode() {
 }
 function updateAuthModeUI() {
   const isLogin = authMode === 'login';
+  const isInitial = !!document.getElementById('login-overlay').dataset.initial;
   document.getElementById('login-title').textContent = isLogin ? 'Welcome back' : 'Create your account';
   document.getElementById('login-sub').textContent = isLogin ? 'Log in to restore your data, or start fresh on this device.' : 'This app is invite-only — ask the owner for an invite code to sign up.';
   document.getElementById('login-submit').textContent = isLogin ? 'Log in' : 'Sign up';
   document.getElementById('login-mode-toggle').textContent = isLogin ? 'New here? Sign up instead' : 'Already have an account? Log in';
   document.getElementById('login-password').autocomplete = isLogin ? 'current-password' : 'new-password';
   document.getElementById('login-invite-wrap').hidden = isLogin;
+  // Guest entry: always offered on the sign-up view; on the login view only at app entry
+  const skipBtn = document.getElementById('login-skip');
+  skipBtn.style.display = (isLogin && !isInitial) ? 'none' : '';
+  skipBtn.textContent = getProfile() ? 'Continue to app' : (isLogin ? 'Continue without an account' : 'Continue as guest');
 }
 
 // Submitting via a real <form> (rather than a plain button click) is what lets Safari/Chrome/Edge
