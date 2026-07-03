@@ -66,17 +66,24 @@ function renderRoutinesPage() {
   if (!listEl) return;
   const routines = getRoutines();
   const active = getActive();
+  const thumbFor = key => {
+    const ex = EXERCISES.find(e => e.key === key);
+    return ex ? `<img class="routine-thumb" src="${IMAGE_BASE + ex.img}" alt="" loading="lazy"/>` : '';
+  };
   listEl.innerHTML = routines.length ? routines.map(r => {
     const inUse = active && active.kind === 'custom' && active.routineId === r.id;
     const meta = r.type === 'daily' ? 'Daily · 1 session' : `Weekly · ${r.days.length} day${r.days.length > 1 ? 's' : ''}`;
-    return `<div class="info-card">
-      <div class="milestone-top"><div class="info-title">${r.name} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
-      <button class="milestone-del" onclick="deleteRoutine('${r.id}')" aria-label="Delete routine">✕</button></div>
-      <div class="info-body">${meta} · ${r.days.reduce((n, d) => n + d.ex.length, 0)} exercises</div>
-      <div class="ex-actions" style="margin-top:10px">
-        <button class="ex-action-btn" onclick="useRoutine('${r.id}')">${inUse ? 'In use ✓' : 'Use'}</button>
-        <button class="ex-action-btn" onclick="editRoutine('${r.id}')">Edit</button>
+    return `<div class="info-card routine-card">
+      <div class="routine-info">
+        <div class="milestone-top"><div class="info-title">${r.name} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
+        <button class="milestone-del" onclick="deleteRoutine('${r.id}')" aria-label="Delete routine">✕</button></div>
+        <div class="info-body">${meta} · ${r.days.reduce((n, d) => n + d.ex.length, 0)} exercises</div>
+        <div class="ex-actions" style="margin-top:10px">
+          <button class="ex-action-btn" onclick="useRoutine('${r.id}')">${inUse ? 'In use ✓' : 'Use'}</button>
+          <button class="ex-action-btn" onclick="editRoutine('${r.id}')">Edit</button>
+        </div>
       </div>
+      ${thumbFor(r.days[0] && r.days[0].ex[0])}
     </div>`;
   }).join('') : '<div class="empty-note">No custom routines yet — create one below, or use a recommended plan.</div>';
 
@@ -85,12 +92,15 @@ function renderRoutinesPage() {
     const usingTemplate = !active || active.kind !== 'custom';
     tplEl.innerHTML = ['ecto', 'meso', 'endo'].map(bt => {
       const inUse = usingTemplate && currentBodyType === bt;
-      return `<div class="info-card">
-        <div class="info-title">${BODY_TYPE_NAMES[bt]} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
-        <div class="info-body">${BODY_GUIDES[bt].subtitle}</div>
-        <div class="seg" style="margin-top:10px" id="tpl-days-${bt}">
-          ${[4, 5, 6, 7].map(n => `<button class="${(inUse && getDaysPerWeek() === n) ? 'active' : ''}" onclick="useTemplate('${bt}',${n})">${n} days</button>`).join('')}
+      return `<div class="info-card routine-card">
+        <div class="routine-info">
+          <div class="info-title">${BODY_TYPE_NAMES[bt]} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
+          <div class="info-body">${BODY_GUIDES[bt].subtitle}</div>
+          <div class="seg" style="margin-top:10px" id="tpl-days-${bt}">
+            ${[4, 5, 6, 7].map(n => `<button class="${(inUse && getDaysPerWeek() === n) ? 'active' : ''}" onclick="useTemplate('${bt}',${n})">${n} days</button>`).join('')}
+          </div>
         </div>
+        ${thumbFor(PLANS[bt][4][0].ex[0])}
       </div>`;
     }).join('');
   }

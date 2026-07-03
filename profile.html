@@ -30,6 +30,8 @@
   </div>
   <div class="scroll">
     <div class="section active">
+      <div class="profile-hero" id="profile-hero"></div>
+
       <div class="section-heading">Account</div>
       <div class="info-card">
         <div id="account-status-signed-out">
@@ -62,6 +64,7 @@
       <div class="info-card">
         <div class="info-title">Body type: <span id="profile-bodytype-label"></span></div>
         <div class="info-body">Plan: <span id="profile-days-label"></span> days/week</div>
+        <div class="info-body">Sex: <span id="profile-sex-label">—</span></div>
         <div class="info-body">Height: <span id="profile-height-label"></span> cm</div>
         <div class="info-body">Weight: <span id="profile-weight-label">—</span></div>
         <div class="bmi-row">
@@ -71,10 +74,19 @@
         <div class="info-body" id="bmi-note" style="margin-top:4px"></div>
         <div class="ex-actions" style="margin-top:12px">
           <button class="ex-action-btn" onclick="openBodyTypePicker()">Switch plan</button>
-          <button class="ex-action-btn" onclick="toggleHeightPanel()">Edit height</button>
+          <button class="ex-action-btn" onclick="toggleHeightPanel()">Edit details</button>
           <button class="ex-action-btn" onclick="toggleWeightPanel()">+ Log weight</button>
         </div>
         <div class="log-panel" id="height-edit-panel" hidden>
+          <label class="seg-label" style="margin-top:0">Name</label>
+          <input type="text" class="auth-input" id="name-input" maxlength="30" placeholder="Name"/>
+          <label class="seg-label">Age</label>
+          <input type="number" class="auth-input" id="age-input" min="10" max="100" placeholder="Age"/>
+          <label class="seg-label">Sex</label>
+          <div class="seg" id="edit-sex" style="margin-bottom:10px">
+            <button data-sex="male" onclick="selectEditSex('male')">Male</button>
+            <button data-sex="female" onclick="selectEditSex('female')">Female</button>
+          </div>
           <div class="log-form">
             <input type="number" placeholder="Height (cm)" id="height-input" min="100" max="250"/>
             <button onclick="saveHeight()">Save</button>

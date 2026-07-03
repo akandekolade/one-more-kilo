@@ -114,7 +114,10 @@ function renderHeaderAccount() {
   const el = document.getElementById('header-account');
   if (!el) return;
   if (currentUser) {
-    el.innerHTML = `<div class="header-account-email">${currentUser.email}</div><button class="header-account-btn" onclick="logOut()">Log out</button>`;
+    // Email + logout live on the Profile page only; the header shows an avatar shortcut
+    const profile = getProfile();
+    const initial = ((profile && profile.name) || currentUser.email || '?')[0].toUpperCase();
+    el.innerHTML = `<a class="header-avatar" href="profile.html" aria-label="Profile">${initial}</a>`;
   } else {
     el.innerHTML = `<button class="header-account-btn" onclick="headerAccountClick()">Log in</button>`;
   }

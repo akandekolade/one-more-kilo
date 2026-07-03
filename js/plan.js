@@ -4,6 +4,13 @@ function applyBodyType(bt) {
   currentBodyType = bt;
   const sub = document.getElementById('header-sub');
   if (sub) sub.textContent = BODY_GUIDES[bt].subtitle;
+  // Home page greets the owner by name, kit-style
+  const profile = getProfile();
+  if (profile && profile.name && currentPageFile() === 'index.html') {
+    const h1 = document.querySelector('.header h1');
+    if (h1) h1.textContent = `Hi, ${profile.name}`;
+    if (sub) sub.textContent = "It's time to challenge your limits.";
+  }
   const whyEl = document.getElementById('muscle-why-body');
   if (whyEl) whyEl.textContent = BODY_GUIDES[bt].muscleWhy;
   renderBodyGuide();

@@ -10,6 +10,25 @@ function renderBodyGuide() {
 }
 
 
+function renderProfileHero() {
+  const el = document.getElementById('profile-hero');
+  if (!el) return;
+  const profile = getProfile() || {};
+  const wlog = sortedWeightLog();
+  const email = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.email : 'Not signed in';
+  const name = profile.name || 'Your profile';
+  const initial = (profile.name || '?')[0].toUpperCase();
+  el.innerHTML = `
+    <div class="hero-avatar">${initial}</div>
+    <div class="hero-name">${name}</div>
+    <div class="hero-email">${email}</div>
+    <div class="hero-stats">
+      <div><b>${wlog.length ? wlog[0].weight + ' Kg' : '—'}</b><span>Weight</span></div>
+      <div><b>${profile.age ? profile.age : '—'}</b><span>Years Old</span></div>
+      <div><b>${profile.heightCm ? profile.heightCm + ' CM' : '—'}</b><span>Height</span></div>
+    </div>`;
+}
+
 function updateProfileLabels() {
   const profile = getProfile();
   if (!profile) return;
@@ -17,8 +36,10 @@ function updateProfileLabels() {
   const hLabel = document.getElementById('profile-height-label');
   const wLabel = document.getElementById('profile-weight-label');
   const dLabel = document.getElementById('profile-days-label');
+  const sLabel = document.getElementById('profile-sex-label');
   if (btLabel) btLabel.textContent = BODY_TYPE_NAMES[profile.bodyType] || profile.bodyType;
   if (hLabel) hLabel.textContent = profile.heightCm;
+  if (sLabel) sLabel.textContent = profile.sex ? profile.sex[0].toUpperCase() + profile.sex.slice(1) : '—';
   if (dLabel) {
     const r = typeof activeRoutine === 'function' ? activeRoutine() : null;
     dLabel.textContent = r ? `custom "${r.name}" — ${r.days.length}` : getDaysPerWeek();
@@ -27,17 +48,28 @@ function updateProfileLabels() {
     const log = sortedWeightLog();
     wLabel.textContent = log.length ? `${log[0].weight} kg (${formatDateShort(log[0].date)})` : '—';
   }
+  renderProfileHero();
   renderWeightHistory();
 }
 
-// ---- edit height ----
+// ---- edit personal details (name, age, sex, height) ----
+let editSex = null;
+function selectEditSex(s) {
+  editSex = s;
+  document.querySelectorAll('#edit-sex button').forEach(b => b.classList.toggle('active', b.dataset.sex === s));
+}
 function toggleHeightPanel() {
   const panel = document.getElementById('height-edit-panel');
   if (!panel) return;
   panel.hidden = !panel.hidden;
   if (!panel.hidden) {
-    const profile = getProfile();
-    document.getElementById('height-input').value = profile ? profile.heightCm : '';
+    const profile = getProfile() || {};
+    document.getElementById('height-input').value = profile.heightCm || '';
+    const nameEl = document.getElementById('name-input');
+    const ageEl = document.getElementById('age-input');
+    if (nameEl) nameEl.value = profile.name || '';
+    if (ageEl) ageEl.value = profile.age || '';
+    selectEditSex(profile.sex || null);
   }
 }
 function saveHeight() {
@@ -46,9 +78,15 @@ function saveHeight() {
   if (!h) { el.focus(); return; }
   const profile = getProfile() || {};
   profile.heightCm = h;
+  const nameEl = document.getElementById('name-input');
+  const ageEl = document.getElementById('age-input');
+  if (nameEl && nameEl.value.trim()) profile.name = nameEl.value.trim();
+  if (ageEl && ageEl.value) profile.age = parseInt(ageEl.value, 10);
+  if (editSex) profile.sex = editSex;
   saveProfile(profile);
   document.getElementById('height-edit-panel').hidden = true;
   updateProfileLabels();
+  if (typeof renderHeaderAccount === 'function') renderHeaderAccount();
 }
 
 // ---- BMI ----
@@ -169,6 +207,6 @@ function renderActivity() {
   if (!recent.length) { list.innerHTML = '<div class="empty-note">No sets logged yet.</div>'; return; }
   list.innerHTML = recent.map(l => {
     const ex = EXERCISES.find(e => e.key === l.key);
-    return `<div class="activity-item"><span>${ex ? ex.name : l.key} — ${l.weight}kg × ${l.reps}</span><span>${formatDateShort(l.date)}</span></div>`;
+    return `<div class="act-row"><span class="act-date">${formatDateShort(l.date)}</span><span class="act-name">${ex ? ex.name : l.key}</span><span class="act-meta">${l.weight}kg × ${l.reps}</span></div>`;
   }).join('');
 }

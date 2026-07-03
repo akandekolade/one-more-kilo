@@ -55,26 +55,28 @@ function svgLineChart(points, unit) {
   </svg>`;
 }
 
-// bars: [{label, value}] left-to-right; maxY optional
+// bars: [{label, value}] left-to-right; kit-style rounded pill tracks with a filled bottom segment
 function svgBarChart(bars, maxY) {
   const ink = chartInk();
   if (!bars.length) return '<div class="empty-note">No training recorded yet.</div>';
-  const W = 320, H = 150, padL = 22, padR = 8, padT = 12, padB = 20;
+  const W = 320, H = 160, padL = 10, padR = 10, padT = 12, padB = 22;
   const top = Math.max(maxY || 0, ...bars.map(b => b.value), 1);
   const innerW = W - padL - padR;
-  const bw = Math.min(26, innerW / bars.length - 2);
-  const Y = v => padT + (H - padT - padB) * (1 - v / top);
+  const bw = Math.min(18, innerW / bars.length - 8);
+  const trackTop = padT, trackBottom = H - padB;
+  const trackH = trackBottom - trackTop;
   const maxIdx = bars.reduce((m, b, i) => b.value > bars[m].value ? i : m, 0);
   const marks = bars.map((b, i) => {
     const x = padL + (innerW / bars.length) * i + (innerW / bars.length - bw) / 2;
-    const y = Y(b.value), h = H - padB - y;
+    const fh = Math.max(trackH * (b.value / top), b.value > 0 ? bw : 0);
+    const fy = trackBottom - fh;
     const showLabel = b.value > 0 && (i === maxIdx || i === bars.length - 1);
-    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h, b.value > 0 ? 3 : 0).toFixed(1)}" rx="4" fill="${ink.primary}"><title>${b.label}: ${b.value} day${b.value === 1 ? '' : 's'}</title></rect>
-      ${showLabel ? `<text x="${(x + bw / 2).toFixed(1)}" y="${(y - 4).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="${ink.text}">${b.value}</text>` : ''}
+    return `<rect x="${x.toFixed(1)}" y="${trackTop}" width="${bw.toFixed(1)}" height="${trackH.toFixed(1)}" rx="${(bw / 2).toFixed(1)}" fill="${ink.border}"/>
+      ${b.value > 0 ? `<rect x="${x.toFixed(1)}" y="${fy.toFixed(1)}" width="${bw.toFixed(1)}" height="${fh.toFixed(1)}" rx="${(bw / 2).toFixed(1)}" fill="${ink.primary}"><title>${b.label}: ${b.value} day${b.value === 1 ? '' : 's'}</title></rect>` : `<rect x="${x.toFixed(1)}" y="${trackTop}" width="${bw.toFixed(1)}" height="${trackH.toFixed(1)}" rx="${(bw / 2).toFixed(1)}" fill="transparent"><title>${b.label}: 0 days</title></rect>`}
+      ${showLabel ? `<text x="${(x + bw / 2).toFixed(1)}" y="${(fy - 5).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="${ink.text}">${b.value}</text>` : ''}
       <text x="${(x + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle" font-size="8.5" fill="${ink.muted}">${b.label}</text>`;
   }).join('');
-  const base = `<line x1="${padL}" x2="${W - padR}" y1="${H - padB}" y2="${H - padB}" stroke="${ink.border}" stroke-width="1"/>`;
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Training days per week">${base}${marks}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="Training days per week">${marks}</svg>`;
 }
 
 // Ring meter: pct 0-1
@@ -196,10 +198,41 @@ function renderCharts() {
 
 function setChartExercise(key) { chartExercise = key; renderCharts(); }
 
-// ---- month calendar ----
+// ---- month calendar (days are tappable to review that day's training) ----
 let calOffset = 0; // months back from current
+let selCalDate = todayISO();
 
 function moveCal(delta) { calOffset = Math.min(0, calOffset + delta); renderCalendar(); }
+
+function selectCalDay(iso) {
+  selCalDate = iso;
+  document.querySelectorAll('.cal-day').forEach(c => c.classList.toggle('selected', c.dataset.iso === iso));
+  const dateEl = document.getElementById('progress-sel-date');
+  if (dateEl) dateEl.textContent = new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+  renderCalDayDetail();
+}
+
+function renderCalDayDetail() {
+  const el = document.getElementById('cal-day-detail');
+  if (!el) return;
+  const iso = selCalDate;
+  const exName = k => { const ex = EXERCISES.find(e => e.key === k); return ex ? ex.name : k; };
+  const checked = Object.keys(getChecklist()[iso] || {});
+  const sets = [];
+  const logs = getLogs();
+  Object.keys(logs).forEach(k => logs[k].forEach(l => { if (l.date === iso) sets.push({ k, ...l }); }));
+  const weightEntry = getWeightLog().filter(w => w.date === iso).pop();
+  if (!checked.length && !sets.length && !weightEntry) {
+    el.innerHTML = `<div class="empty-note">Nothing recorded on ${formatDateShort(iso)}.</div>`;
+    return;
+  }
+  el.innerHTML =
+    (sets.length ? `<div class="seg-label">Sets logged</div>` + sets.map(s =>
+      `<div class="act-row"><span class="act-date">${formatDateShort(iso)}</span><span class="act-name">${exName(s.k)}</span><span class="act-meta">${s.weight}kg × ${s.reps}</span></div>`).join('') : '') +
+    (checked.length ? `<div class="seg-label">Exercises completed</div>` + checked.map(k =>
+      `<div class="act-row"><span class="act-name">${exName(k)}</span><span class="act-meta">✓ done</span></div>`).join('') : '') +
+    (weightEntry ? `<div class="seg-label">Body weight</div><div class="act-row"><span class="act-name">Weigh-in</span><span class="act-meta">${weightEntry.weight} kg</span></div>` : '');
+}
 
 function renderCalendar() {
   const el = document.getElementById('cal-card');
@@ -217,7 +250,7 @@ function renderCalendar() {
     const iso = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     const trained = dates.has(iso);
     const isToday = calOffset === 0 && d === now.getDate();
-    cells += `<div class="cal-day ${trained ? 'trained' : ''} ${isToday ? 'today' : ''}">${d}</div>`;
+    cells += `<div class="cal-day ${trained ? 'trained' : ''} ${isToday ? 'today' : ''} ${iso === selCalDate ? 'selected' : ''}" data-iso="${iso}" onclick="selectCalDay('${iso}')" role="button" tabindex="0">${d}</div>`;
   }
   cells += '</div>';
   el.innerHTML = `<div class="cal-head">
@@ -225,13 +258,16 @@ function renderCalendar() {
       <div class="info-title" style="margin:0">${monthName}</div>
       <button class="mini-btn" onclick="moveCal(1)" aria-label="Next month" ${calOffset === 0 ? 'disabled' : ''}>›</button>
     </div>${cells}
-    <div class="info-body" style="margin-top:8px"><span class="cal-key"></span> trained day</div>`;
+    <div class="info-body" style="margin-top:8px"><span class="cal-key"></span> trained day · tap any day to review it</div>`;
+  renderCalDayDetail();
 }
 
 function renderProgressPage() {
   if (!document.getElementById('progress-header')) return;
   renderProgressHeader();
   renderCalendar();
+  const dateEl = document.getElementById('progress-sel-date');
+  if (dateEl) dateEl.textContent = new Date(selCalDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
   renderActivity();
   setProgressView(progressView);
 }

@@ -3,6 +3,13 @@
 // ---- onboarding + body type + plan length ----
 let pendingBodyType = null;
 let pendingDays = null;
+let pendingSex = null;
+
+function selectSexCard(s) {
+  pendingSex = s;
+  document.querySelectorAll('#onboard-sex button').forEach(b => b.classList.toggle('active', b.dataset.sex === s));
+  checkOnboardReady();
+}
 
 function selectBodyTypeCard(bt) {
   pendingBodyType = bt;
@@ -19,10 +26,14 @@ function selectDaysCard(n) {
 function checkOnboardReady() {
   const h = document.getElementById('onboard-height');
   const w = document.getElementById('onboard-weight');
+  const name = document.getElementById('onboard-name');
+  const age = document.getElementById('onboard-age');
   const btn = document.getElementById('onboard-submit');
   if (!btn) return;
   const isSwitch = document.getElementById('onboard-overlay').dataset.mode === 'switch';
-  btn.disabled = isSwitch ? !(pendingBodyType && pendingDays) : !(pendingBodyType && pendingDays && h.value && w.value);
+  btn.disabled = isSwitch
+    ? !(pendingBodyType && pendingDays)
+    : !(pendingBodyType && pendingDays && pendingSex && name.value.trim() && age.value && h.value && w.value);
 }
 
 function completeOnboarding() {
@@ -43,8 +54,10 @@ function completeOnboarding() {
   }
   const h = parseFloat(document.getElementById('onboard-height').value);
   const w = parseFloat(document.getElementById('onboard-weight').value);
-  if (!pendingBodyType || !pendingDays || !h || !w) return;
-  saveProfile({ bodyType: pendingBodyType, daysPerWeek: pendingDays, heightCm: h });
+  const name = document.getElementById('onboard-name').value.trim();
+  const age = parseInt(document.getElementById('onboard-age').value, 10);
+  if (!pendingBodyType || !pendingDays || !pendingSex || !name || !age || !h || !w) return;
+  saveProfile({ bodyType: pendingBodyType, daysPerWeek: pendingDays, heightCm: h, name, age, sex: pendingSex });
   const log = getWeightLog();
   log.push({ date: todayISO(), weight: w });
   saveWeightLog(log);
@@ -87,6 +100,15 @@ const SHARED_OVERLAYS_HTML = `
   </div>
   <div class="onboard-form">
     <div id="onboard-hw">
+      <label for="onboard-name">Your name</label>
+      <input type="text" id="onboard-name" maxlength="30" placeholder="e.g. Madison" oninput="checkOnboardReady()"/>
+      <label for="onboard-age">Age</label>
+      <input type="number" id="onboard-age" min="10" max="100" placeholder="e.g. 24" oninput="checkOnboardReady()"/>
+      <label>Sex</label>
+      <div class="seg" id="onboard-sex" style="margin-bottom:14px">
+        <button data-sex="male" onclick="selectSexCard('male')">Male</button>
+        <button data-sex="female" onclick="selectSexCard('female')">Female</button>
+      </div>
       <label for="onboard-height">Height (cm)</label>
       <input type="number" id="onboard-height" min="100" max="250" placeholder="e.g. 175"/>
       <label for="onboard-weight">Current weight (kg)</label>
@@ -99,16 +121,18 @@ const SHARED_OVERLAYS_HTML = `
   <div class="onboard-title" id="login-title">Welcome back</div>
   <div class="onboard-sub" id="login-sub">Log in to restore your data, or start fresh on this device.</div>
   <form class="onboard-form" id="login-form" onsubmit="return handleAuthSubmit(event)" autocomplete="on">
-    <label for="login-email">Email</label>
-    <input type="email" id="login-email" name="email" autocomplete="username" placeholder="you@example.com"/>
-    <label for="login-password">Password</label>
-    <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Password"/>
-    <div id="login-invite-wrap" hidden>
-      <label for="login-invite">Speak, friend, and enter.</label>
-      <input type="text" id="login-invite" autocomplete="off" placeholder="Ask the app owner"/>
+    <div class="auth-panel">
+      <label for="login-email">Email</label>
+      <input type="email" id="login-email" name="email" autocomplete="username" placeholder="you@example.com"/>
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Password"/>
+      <div id="login-invite-wrap" hidden>
+        <label for="login-invite">Speak, friend, and enter.</label>
+        <input type="text" id="login-invite" autocomplete="off" placeholder="Ask the app owner"/>
+      </div>
     </div>
     <button type="submit" id="login-submit">Log in</button>
-    <div class="info-body" id="login-error" style="margin-top:8px;color:#e87a50"></div>
+    <div class="info-body" id="login-error" style="margin-top:8px;color:#e87a50;text-align:center"></div>
     <button type="button" class="link-btn" id="login-mode-toggle" onclick="toggleAuthMode()">New here? Sign up instead</button>
     <button type="button" class="link-btn muted" id="login-skip" onclick="skipLogin()">Continue without an account</button>
   </form>
@@ -124,11 +148,12 @@ const SHARED_OVERLAYS_HTML = `
 </div>
 `;
 
+// Inline SVG icons (kit-style filled glyphs, inherit currentColor)
 const NAV_ITEMS = [
-  { href: 'index.html', icon: '📅', label: 'Plan' },
-  { href: 'progress.html', icon: '📈', label: 'Progress' },
-  { href: 'routines.html', icon: '🗂️', label: 'Routines' },
-  { href: 'profile.html', icon: '👤', label: 'Profile' }
+  { href: 'index.html', label: 'Plan', icon: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor"><path d="M3 11.2 12 4l9 7.2V20a1 1 0 0 1-1 1h-5.4v-5.4H9.4V21H4a1 1 0 0 1-1-1z"/></svg>' },
+  { href: 'progress.html', label: 'Progress', icon: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor"><rect x="4" y="12" width="3.6" height="8" rx="1.6"/><rect x="10.2" y="7" width="3.6" height="13" rx="1.6"/><rect x="16.4" y="3.5" width="3.6" height="16.5" rx="1.6"/></svg>' },
+  { href: 'routines.html', label: 'Routines', icon: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm1.5 4.4h7v1.8h-7zm0 4h7v1.8h-7zm0 4h4.6v1.8H8.5z"/></svg>' },
+  { href: 'profile.html', label: 'Profile', icon: '<svg viewBox="0 0 24 24" width="23" height="23" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20.2c.7-3.6 4-5.7 8-5.7s7.3 2.1 8 5.7c-.1.5-.5.8-1 .8H5c-.5 0-.9-.3-1-.8z"/></svg>' }
 ];
 
 function currentPageFile() {

@@ -247,3 +247,53 @@ html[data-theme="light"] .info-card,html[data-theme="light"] .ex-card,html[data-
 
 /* Day dots pick up their day color more strongly */
 .day-chip .day-dot{width:7px;height:7px}
+
+/* ===== v4: kit-exact components (green translation of FitBody screens) ===== */
+/* Login: accent panel holding white fields */
+#login-overlay .onboard-title,#login-overlay .onboard-sub{text-align:center}
+.auth-panel{background:var(--primary);border-radius:22px;padding:18px 16px 10px;margin-bottom:16px}
+.auth-panel label{color:var(--on-primary);font-weight:700;font-size:13px;display:block;margin-bottom:6px}
+.auth-panel input{width:100%;background:#fff;color:#17160f;border:none;border-radius:14px;padding:12px;font-size:14px;margin-bottom:12px}
+#login-overlay #login-submit{background:var(--surface);color:var(--text);border:.5px solid var(--border)}
+
+/* Header avatar shortcut (signed in) */
+.header-avatar{width:38px;height:38px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;text-decoration:none}
+
+/* Bottom nav: solid accent bar with dark glyphs, kit-style */
+.nav{background:var(--primary);border:none}
+.nav-item{color:var(--on-primary);opacity:.75}
+.nav-item.active{background:none;color:var(--on-primary);opacity:1}
+.nav-item.active .nav-icon{background:var(--on-primary);color:var(--primary);border-radius:50%;padding:7px}
+.nav-icon{display:flex;align-items:center;justify-content:center}
+.nav-item span:last-child{font-size:10px;font-weight:700}
+
+/* Progress heading */
+.my-progress-label{font-size:13px;color:var(--muted);margin:4px 2px 2px}
+.my-progress-date{font-size:26px;font-weight:800;color:var(--primary);margin:0 2px 12px;letter-spacing:-.5px}
+
+/* Accent activity rows (kit's Thu 14 | Steps | Duration rows) */
+.act-row{display:flex;align-items:center;background:var(--primary-soft);border-radius:14px;padding:12px 14px;margin-bottom:8px;gap:12px}
+.act-date{font-weight:800;color:var(--on-soft);font-size:12.5px;flex-shrink:0;min-width:44px;border-right:1.5px solid var(--border);padding-right:10px}
+.act-name{flex:1;font-size:13.5px;font-weight:600}
+.act-meta{color:var(--on-soft);font-weight:700;font-size:12.5px;flex-shrink:0}
+
+/* Calendar interactivity */
+.cal-day{cursor:pointer}
+.cal-day.selected{outline:2px solid var(--primary);color:var(--text);font-weight:700}
+.cal-day.trained.selected{color:var(--on-primary)}
+
+/* Routine cards with thumbnail */
+.routine-card{display:flex;gap:12px;align-items:stretch}
+.routine-info{flex:1;min-width:0}
+.routine-thumb{width:86px;border-radius:14px;object-fit:cover;background:var(--img-bg);flex-shrink:0;align-self:center;height:86px}
+
+/* Profile hero (kit's lilac header block -> green) */
+.profile-hero{background:var(--primary);border-radius:24px;padding:22px 16px;text-align:center;margin-bottom:18px}
+.hero-avatar{width:84px;height:84px;border-radius:50%;background:var(--surface);color:var(--primary);font-size:36px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;border:3px solid rgba(255,255,255,.5)}
+.hero-name{font-size:20px;font-weight:800;color:var(--on-primary)}
+.hero-email{font-size:12px;color:var(--on-primary);opacity:.75;margin-top:2px}
+.hero-stats{display:flex;margin-top:14px;background:rgba(0,0,0,.14);border-radius:14px;overflow:hidden}
+.hero-stats > div{flex:1;padding:10px 4px;border-right:1px solid rgba(255,255,255,.18)}
+.hero-stats > div:last-child{border-right:none}
+.hero-stats b{display:block;font-size:14px;color:var(--on-primary)}
+.hero-stats span{font-size:10px;color:var(--on-primary);opacity:.75}

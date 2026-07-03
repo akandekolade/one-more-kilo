@@ -33,13 +33,16 @@
       <div class="info-card" id="progress-header"></div>
 
       <div class="seg" id="progress-seg" style="margin:14px 0">
-        <button data-view="log" onclick="setProgressView('log')" class="active">Workout log</button>
+        <button data-view="log" onclick="setProgressView('log')" class="active">Workout</button>
         <button data-view="charts" onclick="setProgressView('charts')">Charts</button>
       </div>
 
       <div id="progress-log">
+        <div class="my-progress-label">My Progress</div>
+        <div class="my-progress-date" id="progress-sel-date"></div>
         <div class="info-card" id="cal-card"></div>
-        <div class="section-heading" style="margin-top:16px">Recent activity</div>
+        <div id="cal-day-detail" style="margin-top:12px"></div>
+        <div class="section-heading" style="margin-top:20px">Recent activity</div>
         <div id="activity-list"></div>
       </div>
 
