@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="One more Kilo!"/>
 <meta name="theme-color" content="#0f0f0f" id="meta-theme-color"/>
-<title>Routines — One more Kilo!</title>
+<title>Exercises — One more Kilo!</title>
 <script>
 // Runs before CSS paints so there's no flash of the wrong theme
 (function () {
@@ -23,20 +23,18 @@
 <body>
 <div class="app">
   <div class="header">
-    <div><h1>Routines</h1><div class="header-sub" id="header-sub">Ectomorph mass builder</div></div>
+    <div><h1>Exercises</h1><div class="header-sub" id="header-sub">Ectomorph mass builder</div></div>
     <div class="header-account" id="header-account">
       <button class="header-account-btn" id="header-account-btn" onclick="headerAccountClick()">Log in</button>
     </div>
   </div>
   <div class="scroll">
     <div class="section active">
-      <div class="section-heading">My routines</div>
-      <div id="my-routines"></div>
-      <div id="routine-builder" style="margin-top:12px"></div>
-
-      <div class="section-heading" style="margin-top:20px">Recommended plans</div>
-      <div class="info-body" style="margin-bottom:12px">The built-in body-type programs. Pick one and how many days a week you can train.</div>
-      <div id="template-plans"></div>
+      <div class="section-heading">All exercises</div>
+      <input type="search" class="auth-input" placeholder="Search exercises…" oninput="setLibSearch(this.value)" style="border-radius:20px"/>
+      <div class="lib-chips" id="library-filters"></div>
+      <div class="info-body" id="library-count" style="margin:4px 2px 10px"></div>
+      <div id="library-list"></div>
     </div>
   </div>
 </div>

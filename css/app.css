@@ -310,3 +310,28 @@ html[data-theme="light"] .info-card,html[data-theme="light"] .ex-card,html[data-
 .hero-remove{color:var(--on-primary);opacity:.8;width:auto;margin:2px auto 0;font-size:11.5px;text-decoration:underline;padding:2px}
 .header-avatar{overflow:hidden}
 .header-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* ===== collapsible exercise cards + library ===== */
+.ex-head{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 10px;cursor:pointer}
+.ex-thumb{width:54px;height:54px;border-radius:12px;object-fit:cover;background:var(--img-bg);flex-shrink:0}
+.ex-head-mid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.ex-head-mid .ex-name{font-size:14.5px}
+.ex-head-mid .ex-badge{margin-left:0}
+.ex-chevron{color:var(--muted);font-size:13px;transition:transform .2s;flex-shrink:0}
+.ex-card.open .ex-chevron{transform:rotate(180deg)}
+.ex-collapse{display:none}
+.ex-card.open .ex-collapse{display:block}
+.ex-card{padding-top:0}
+.ex-card.open .ex-img-wrap{margin-top:2px}
+
+/* Loud done state: whole card goes green */
+.ex-card.done{background:var(--primary-soft);border:1.5px solid var(--primary)}
+.ex-card.done .ex-head-mid .ex-name{color:var(--on-soft)}
+.ex-card.done .ex-thumb{opacity:.85}
+.ex-check.done{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+
+/* Library filter chips (kit search screen) */
+.lib-chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 6px;scrollbar-width:none}
+.lib-chips::-webkit-scrollbar{display:none}
+.lib-chip{flex-shrink:0;padding:8px 16px;border-radius:20px;border:.5px solid var(--border);background:var(--card);color:var(--text);font-size:12.5px;font-weight:700;cursor:pointer}
+.lib-chip.active{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}

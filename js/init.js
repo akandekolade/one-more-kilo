@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
   renderRoutinesPage();
   renderProgressPage();
   renderGallery();
+  renderLibrary();
   renderBuilder();
   // Show the login screen once per app session, not on every page navigation
   if (!sessionStorage.getItem('wk_entered')) openLoginOverlay(true);

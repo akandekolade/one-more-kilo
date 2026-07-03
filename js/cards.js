@@ -70,15 +70,13 @@ function flipStep(key) {
 }
 
 function loadVisibleImages() {
-  document.querySelectorAll('#tab-weekly [id^="ex-"]').forEach(dayEl => {
-    if (dayEl.style.display === 'none') return;
-    dayEl.querySelectorAll('.ex-card').forEach(card => {
-      const wrap = card.querySelector('.ex-img-wrap');
-      if (wrap && !wrap.dataset.loaded) {
-        wrap.dataset.loaded = '1';
-        loadCardImage(card);
-      }
-    });
+  // Step photos load only once a card is expanded (collapsed rows show a lazy thumbnail)
+  document.querySelectorAll('.ex-card.open').forEach(card => {
+    const wrap = card.querySelector('.ex-img-wrap');
+    if (wrap && !wrap.dataset.loaded) {
+      wrap.dataset.loaded = '1';
+      loadCardImage(card);
+    }
   });
 }
 
@@ -337,10 +335,32 @@ function playBeep() {
 }
 
 // ---- card rendering ----
+// Cards render collapsed: a compact tappable row (thumb, name, badge, check).
+// Tapping expands the full detail (photos, stats, steps, timer, set logging).
+function toggleCardOpenEl(headEl) {
+  const card = headEl.closest('.ex-card');
+  if (!card) return;
+  card.classList.toggle('open');
+  if (card.classList.contains('open')) {
+    const wrap = card.querySelector('.ex-img-wrap');
+    if (wrap && !wrap.dataset.loaded) { wrap.dataset.loaded = '1'; loadCardImage(card); }
+  }
+}
+
 function renderCard(ex) {
   const done = isDoneToday(ex.key);
   const steps = (EXERCISE_STEPS[ex.key] || []).map(s => `<li>${s}</li>`).join('');
   return `<div class="ex-card ${done ? 'done' : ''}" data-ex-key="${ex.key}" data-rest="${ex.rest}">
+    <div class="ex-head" onclick="toggleCardOpenEl(this)" role="button" aria-label="Show ${ex.name} details">
+      <img class="ex-thumb" src="${IMAGE_BASE + ex.img}" alt="" loading="lazy"/>
+      <div class="ex-head-mid">
+        <div class="ex-name">${ex.name}</div>
+        <span class="ex-badge ${ex.badgeClass}">${ex.badge}</span>
+      </div>
+      <button class="ex-check ${done ? 'done' : ''}" onclick="event.stopPropagation();toggleDone('${ex.key}')" aria-label="Mark done today">✓</button>
+      <span class="ex-chevron">▾</span>
+    </div>
+    <div class="ex-collapse">
     <div class="ex-img-wrap" data-img-base="${ex.img}" data-step="0">
       <div class="img-slot"><div class="img-loading">⏳</div></div>
       <button class="step-arrow prev" onclick="flipStep('${ex.key}')" aria-label="Previous step">‹</button>
@@ -348,13 +368,6 @@ function renderCard(ex) {
       <div class="step-dots"><span class="step-dot active" data-dot="0"></span><span class="step-dot" data-dot="1"></span></div>
     </div>
     <div class="ex-body">
-      <div class="ex-card-top">
-        <div class="ex-name">${ex.name}</div>
-        <div class="ex-top-right">
-          <span class="ex-badge ${ex.badgeClass}">${ex.badge}</span>
-          <button class="ex-check ${done ? 'done' : ''}" onclick="toggleDone('${ex.key}')" aria-label="Mark done today">✓</button>
-        </div>
-      </div>
       <div class="ex-stats">
         <div class="ex-stat"><div class="ex-stat-val ${ex.statColor}">${ex.sets}</div><div class="ex-stat-lbl">Sets</div></div>
         <div class="ex-stat"><div class="ex-stat-val ${ex.statColor}">${ex.reps}</div><div class="ex-stat-lbl">${ex.repsLabel || 'Reps'}</div></div>
@@ -380,6 +393,7 @@ function renderCard(ex) {
         </div>
         <div class="log-history" id="log-history-${ex.key}"></div>
       </div>
+    </div>
     </div>
   </div>`;
 }
