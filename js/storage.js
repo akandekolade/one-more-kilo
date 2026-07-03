@@ -79,3 +79,10 @@ function getExtras() {
   return all;
 }
 function saveExtras(obj) { localStorage.setItem('wk_extras', JSON.stringify(obj)); syncToCloud(); }
+
+// ---- progress photos (synced per-photo to Firestore, not in the main state doc) ----
+function getPhotos() { try { return JSON.parse(localStorage.getItem('wk_photos')) || []; } catch (e) { return []; } }
+function savePhotosLocal(arr) {
+  try { localStorage.setItem('wk_photos', JSON.stringify(arr)); }
+  catch (e) { alert('Device photo storage is full — delete some gallery photos to add new ones.'); throw e; }
+}

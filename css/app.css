@@ -297,3 +297,16 @@ html[data-theme="light"] .info-card,html[data-theme="light"] .ex-card,html[data-
 .hero-stats > div:last-child{border-right:none}
 .hero-stats b{display:block;font-size:14px;color:var(--on-primary)}
 .hero-stats span{font-size:10px;color:var(--on-primary);opacity:.75}
+
+/* ===== gallery + profile photo + auth extras ===== */
+.forgot-link{background:none;border:none;color:var(--on-primary);font-size:12px;font-weight:700;cursor:pointer;display:block;margin-left:auto;padding:2px 0 6px;text-decoration:underline}
+.gal-date{font-size:13px;font-weight:800;color:var(--primary);margin:16px 2px 8px}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gal-thumb{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;cursor:pointer;background:var(--img-bg)}
+#photo-viewer[hidden]{display:none}
+.hero-avatar{position:relative;cursor:pointer;overflow:visible}
+.hero-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.hero-cam{position:absolute;bottom:-2px;right:-2px;background:var(--surface);border-radius:50%;width:28px;height:28px;font-size:13px;display:flex;align-items:center;justify-content:center;border:2px solid var(--primary)}
+.hero-remove{color:var(--on-primary);opacity:.8;width:auto;margin:2px auto 0;font-size:11.5px;text-decoration:underline;padding:2px}
+.header-avatar{overflow:hidden}
+.header-avatar img{width:100%;height:100%;object-fit:cover}

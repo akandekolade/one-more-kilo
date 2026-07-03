@@ -117,7 +117,8 @@ function renderHeaderAccount() {
     // Email + logout live on the Profile page only; the header shows an avatar shortcut
     const profile = getProfile();
     const initial = ((profile && profile.name) || currentUser.email || '?')[0].toUpperCase();
-    el.innerHTML = `<a class="header-avatar" href="profile.html" aria-label="Profile">${initial}</a>`;
+    const face = (profile && profile.photo) ? `<img src="${profile.photo}" alt=""/>` : initial;
+    el.innerHTML = `<a class="header-avatar" href="profile.html" aria-label="Profile">${face}</a>`;
   } else {
     el.innerHTML = `<button class="header-account-btn" onclick="headerAccountClick()">Log in</button>`;
   }
@@ -159,6 +160,7 @@ function applyCloudState(data) {
 function pullFromCloud() {
   if (!currentUser) return;
   setSyncStatus('Syncing…');
+  pullPhotosFromCloud();
   db.collection('users').doc(currentUser.uid).get().then(doc => {
     if (doc.exists) {
       applyCloudState(doc.data());
@@ -201,3 +203,46 @@ auth.onAuthStateChanged(user => {
     if (inEl) inEl.hidden = true;
   }
 });
+
+// ---- password management ----
+// Both flows use Firebase's email reset link: no old-password handling in the app,
+// and it works even when the login session is stale.
+function forgotPassword() {
+  const email = document.getElementById('login-email').value.trim();
+  const errEl = document.getElementById('login-error');
+  if (!email) { errEl.textContent = 'Type your email above first, then tap "Forgot password?".'; return; }
+  auth.sendPasswordResetEmail(email)
+    .then(() => { errEl.style.color = 'var(--primary)'; errEl.textContent = `Reset link sent to ${email} — check your inbox.`; })
+    .catch(e => { errEl.style.color = '#e87a50'; errEl.textContent = e.message; });
+}
+
+function changePassword() {
+  if (!currentUser) return;
+  const el = document.getElementById('account-msg');
+  auth.sendPasswordResetEmail(currentUser.email)
+    .then(() => { if (el) el.textContent = `Password change link sent to ${currentUser.email}.`; })
+    .catch(e => { if (el) el.textContent = e.message; });
+}
+
+// ---- progress photos: synced one Firestore doc per photo (main doc has a 1MB cap) ----
+function syncPhotoToCloud(photo) {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).collection('photos').doc(photo.id).set(photo).catch(() => {});
+}
+function deletePhotoFromCloud(id) {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).collection('photos').doc(id).delete().catch(() => {});
+}
+function pullPhotosFromCloud() {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).collection('photos').get().then(snap => {
+    const local = getPhotos();
+    const ids = new Set(local.map(p => p.id));
+    let added = false;
+    snap.forEach(doc => { if (!ids.has(doc.id)) { local.push(doc.data()); added = true; } });
+    if (added) { savePhotosLocal(local); if (typeof renderGallery === 'function') renderGallery(); }
+    // push any local-only photos up (e.g. taken while signed out)
+    const cloudIds = new Set(); snap.forEach(doc => cloudIds.add(doc.id));
+    local.filter(p => !cloudIds.has(p.id)).forEach(syncPhotoToCloud);
+  }).catch(() => {});
+}

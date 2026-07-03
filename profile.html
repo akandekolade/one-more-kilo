@@ -41,7 +41,12 @@
         <div id="account-status-signed-in" hidden>
           <div class="info-title">Signed in as <span id="account-email"></span></div>
           <div class="info-body" id="sync-status">Synced</div>
-          <div class="ex-actions" style="margin-top:10px"><button class="ex-action-btn" onclick="logOut()">Log out</button></div>
+          <div class="info-body" style="margin-top:4px">Your email can't be changed — it anchors your saved progress.</div>
+          <div class="ex-actions" style="margin-top:10px">
+            <button class="ex-action-btn" onclick="changePassword()">Change password</button>
+            <button class="ex-action-btn" onclick="logOut()">Log out</button>
+          </div>
+          <div class="info-body" id="account-msg" style="margin-top:8px;color:var(--primary)"></div>
         </div>
       </div>
 
@@ -180,6 +185,7 @@
 <script src="js/plan.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/routines.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/init.js"></script>
 </body>
 </html>
