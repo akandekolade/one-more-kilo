@@ -105,8 +105,10 @@ async function submitAuth() {
 }
 function logOut() {
   auth.signOut().then(() => {
-    ['wk_profile', 'wk_logs', 'wk_checklist', 'wk_milestones', 'wk_weightlog', 'wk_daydone', 'wk_routines', 'wk_active', 'wk_extras'].forEach(k => localStorage.removeItem(k));
-    location.reload();
+    ['wk_profile', 'wk_logs', 'wk_checklist', 'wk_milestones', 'wk_weightlog', 'wk_daydone', 'wk_routines', 'wk_active', 'wk_extras', 'wk_photos'].forEach(k => localStorage.removeItem(k));
+    // Clear the session flag so the login screen greets them again
+    sessionStorage.removeItem('wk_entered');
+    location.href = 'index.html';
   });
 }
 
