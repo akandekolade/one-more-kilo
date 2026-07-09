@@ -69,7 +69,10 @@ function renderPlan() {
         <div class="week-check-box" id="week-check-${id}"></div>
         <div><div class="week-check-title">This week's session</div><div class="week-check-sub" id="week-check-sub-${id}"></div></div>
       </div>
-      <div class="day-progress" data-day-progress="${id}"></div>
+      <div class="milestone-top" style="margin-bottom:4px">
+        <div class="day-progress" data-day-progress="${id}"></div>
+        <button class="ex-action-btn" id="markall-${id}" onclick="toggleAllDone('${id}')" style="flex:0 0 auto;padding:6px 12px">Mark all done ✓</button>
+      </div>
       <div class="ex-card-list" data-day-list="${id}">${cards}${extraCards ? `<div class="ex-section-label" style="margin-top:4px">Extras this week</div>${extraCards}` : ''}</div>
       <button class="ex-action-btn" style="width:100%;margin-bottom:16px" onclick="addExtraTo('${id}')">+ Add an extra exercise to this day</button>
     </div>`;

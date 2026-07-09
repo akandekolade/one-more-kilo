@@ -23,7 +23,28 @@ function saveChecklist(obj) {
   localStorage.setItem('wk_checklist', JSON.stringify(obj));
   syncToCloud();
 }
-function isDoneToday(key) { const c = getChecklist(); return !!(c[todayISO()] && c[todayISO()][key]); }
+// A checked exercise stays "done" for a full 7-day cycle from the day it was
+// checked (history stays date-keyed so the calendar still shows real dates).
+function lastCheckedISO(key) {
+  const c = getChecklist();
+  let latest = null;
+  Object.keys(c).forEach(date => { if (c[date] && c[date][key] && (!latest || date > latest)) latest = date; });
+  return latest;
+}
+function isDoneThisWeek(key) {
+  const d = lastCheckedISO(key);
+  return !!d && (Date.now() - new Date(d + 'T00:00:00').getTime()) < WEEK_MS;
+}
+// Unchecking removes the marks from the current 7-day window only — older history stays
+function uncheckThisWeek(obj, key) {
+  const cutoff = Date.now() - WEEK_MS;
+  Object.keys(obj).forEach(date => {
+    if (obj[date] && obj[date][key] && new Date(date + 'T00:00:00').getTime() >= cutoff) {
+      delete obj[date][key];
+      if (!Object.keys(obj[date]).length) delete obj[date];
+    }
+  });
+}
 
 function getLogs() { try { return JSON.parse(localStorage.getItem('wk_logs')) || {}; } catch (e) { return {}; } }
 function saveLogs(obj) { localStorage.setItem('wk_logs', JSON.stringify(obj)); syncToCloud(); }

@@ -86,10 +86,14 @@ function toggleDone(key) {
   const card = document.querySelector(`.ex-card[data-ex-key="${key}"]`);
   if (!card) return;
   const checklist = getChecklist();
-  const today = todayISO();
-  checklist[today] = checklist[today] || {};
-  const newState = !checklist[today][key];
-  if (newState) checklist[today][key] = true; else delete checklist[today][key];
+  const newState = !isDoneThisWeek(key);
+  if (newState) {
+    const today = todayISO();
+    checklist[today] = checklist[today] || {};
+    checklist[today][key] = true;
+  } else {
+    uncheckThisWeek(checklist, key);
+  }
   saveChecklist(checklist);
   card.classList.toggle('done', newState);
   card.querySelector('.ex-check').classList.toggle('done', newState);
@@ -101,13 +105,44 @@ function toggleDone(key) {
   }
 }
 
+// Mark or clear every exercise of a day at once
+function toggleAllDone(dayId) {
+  const list = document.querySelector(`[data-day-list="${dayId}"]`);
+  if (!list) return;
+  const keys = [...list.querySelectorAll('.ex-card')].map(c => c.dataset.exKey);
+  if (!keys.length) return;
+  const allDone = keys.every(isDoneThisWeek);
+  const checklist = getChecklist();
+  if (allDone) {
+    keys.forEach(k => uncheckThisWeek(checklist, k));
+  } else {
+    const today = todayISO();
+    checklist[today] = checklist[today] || {};
+    keys.forEach(k => { checklist[today][k] = true; });
+  }
+  saveChecklist(checklist);
+  keys.forEach(k => {
+    const card = list.querySelector(`.ex-card[data-ex-key="${k}"]`);
+    if (!card) return;
+    card.classList.toggle('done', !allDone);
+    const chk = card.querySelector('.ex-check');
+    if (chk) chk.classList.toggle('done', !allDone);
+  });
+  updateDayProgress(dayId);
+  maybeUpgradeDayDone(dayId);
+  renderWeekCheck(dayId);
+  renderWeekProgress();
+}
+
 function updateDayProgress(dayId) {
   const list = document.querySelector(`[data-day-list="${dayId}"]`);
   const el = document.querySelector(`[data-day-progress="${dayId}"]`);
   if (!list || !el) return;
   const total = list.querySelectorAll('.ex-card').length;
   const done = list.querySelectorAll('.ex-card.done').length;
-  el.textContent = total ? `${done}/${total} done today` : '';
+  el.textContent = total ? `${done}/${total} done this cycle` : '';
+  const allBtn = document.getElementById('markall-' + dayId);
+  if (allBtn) allBtn.textContent = (total > 0 && done >= total) ? 'Unmark all ✕' : 'Mark all done ✓';
 }
 
 // How many of a day's exercises are checked off today
@@ -348,7 +383,7 @@ function toggleCardOpenEl(headEl) {
 }
 
 function renderCard(ex, opts) {
-  const done = isDoneToday(ex.key);
+  const done = isDoneThisWeek(ex.key);
   const steps = (EXERCISE_STEPS[ex.key] || []).map(s => `<li>${s}</li>`).join('');
   // Library mode strips training controls (check/log/timer): the library is for
   // learning and browsing; training happens on the Plan page.

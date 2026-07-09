@@ -88,8 +88,16 @@ function saveHeight() {
   const ageEl = document.getElementById('age-input');
   if (nameEl && nameEl.value.trim()) profile.name = nameEl.value.trim();
   if (ageEl && ageEl.value) profile.age = parseInt(ageEl.value, 10);
+  const sexChanged = editSex && editSex !== profile.sex;
   if (editSex) profile.sex = editSex;
   saveProfile(profile);
+  if (sexChanged) {
+    // The recommended plan follows the profile's sex — drop any explicit override
+    const a = getActive();
+    if (a && a.planSex) { delete a.planSex; saveActive(a); }
+    applyBodyType(currentBodyType); // re-render the plan for the new gender
+    if (typeof renderRoutinesPage === 'function') renderRoutinesPage();
+  }
   document.getElementById('height-edit-panel').hidden = true;
   updateProfileLabels();
   if (typeof renderHeaderAccount === 'function') renderHeaderAccount();

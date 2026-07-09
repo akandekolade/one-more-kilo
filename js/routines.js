@@ -8,10 +8,14 @@ const MUSCLE_GROUPS = {
 };
 
 // ---------- exercise picker (shared by builder and day extras) ----------
+// When an isSelected(key) callback is passed, rows render a checkbox and picks
+// toggle: the builder uses this for multi-select with visible selection state.
 let pickerOnPick = null;
+let pickerIsSelected = null;
 
-function openExercisePicker(onPick) {
+function openExercisePicker(onPick, isSelected) {
   pickerOnPick = onPick;
+  pickerIsSelected = isSelected || null;
   let el = document.getElementById('exercise-picker');
   if (!el) {
     el = document.createElement('div');
@@ -33,6 +37,7 @@ function closeExercisePicker() {
   const el = document.getElementById('exercise-picker');
   if (el) el.hidden = true;
   pickerOnPick = null;
+  pickerIsSelected = null;
   if (typeof pickerClosed === 'function') pickerClosed();
 }
 
@@ -48,14 +53,17 @@ function renderPickerList() {
   });
   listEl.innerHTML = Object.keys(groups).map(g =>
     `<div class="seg-label">${g}</div>` +
-    groups[g].map(ex =>
-      `<button class="picker-row" onclick="pickExercise('${ex.key}')"><span>${ex.name}</span><span class="picker-meta">${ex.sets}×${ex.reps}</span></button>`
-    ).join('')
+    groups[g].map(ex => {
+      const sel = pickerIsSelected ? pickerIsSelected(ex.key) : false;
+      const box = pickerIsSelected ? `<span class="picker-checkbox ${sel ? 'on' : ''}">${sel ? '✓' : ''}</span>` : '';
+      return `<button class="picker-row ${sel ? 'selected' : ''}" onclick="pickExercise('${ex.key}')">${box}<span style="flex:1">${ex.name}</span><span class="picker-meta">${ex.sets}×${ex.reps}</span></button>`;
+    }).join('')
   ).join('') || '<div class="empty-note">No exercises match.</div>';
 }
 
 function pickExercise(key) {
   if (pickerOnPick) pickerOnPick(key);
+  if (pickerIsSelected) renderPickerList(); // refresh checkboxes on toggle
 }
 
 // ---------- routines page ----------
@@ -81,6 +89,7 @@ function renderRoutinesPage() {
         <div class="ex-actions" style="margin-top:10px">
           <button class="ex-action-btn" onclick="useRoutine('${r.id}')">${inUse ? 'In use ✓' : 'Use'}</button>
           <button class="ex-action-btn" onclick="editRoutine('${r.id}')">Edit</button>
+          <button class="ex-action-btn" onclick="duplicateRoutine('${r.id}')">Duplicate</button>
         </div>
       </div>
       ${thumbFor(r.days[0] && r.days[0].ex[0])}
@@ -90,18 +99,26 @@ function renderRoutinesPage() {
   const tplEl = document.getElementById('template-plans');
   if (tplEl) {
     const usingTemplate = !active || active.kind !== 'custom';
-    tplEl.innerHTML = ['ecto', 'meso', 'endo'].map(bt => {
-      const inUse = usingTemplate && currentBodyType === bt;
-      return `<div class="info-card routine-card">
-        <div class="routine-info">
-          <div class="info-title">${BODY_TYPE_NAMES[bt]} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
-          <div class="info-body">${BODY_GUIDES[bt].subtitle}</div>
-          <div class="seg" style="margin-top:10px" id="tpl-days-${bt}">
-            ${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="${(inUse && getDaysPerWeek() === n) ? 'active' : ''}" onclick="useTemplate('${bt}',${n})">${n}</button>`).join('')}
+    const profile = getProfile();
+    const mySex = (profile && profile.sex === 'female') ? 'female' : 'male';
+    const order = mySex === 'female' ? ['female', 'male'] : ['male', 'female'];
+    tplEl.innerHTML = order.map(sex => {
+      const heading = sex === 'female' ? "Women's plans" : "Men's plans";
+      const cards = ['ecto', 'meso', 'endo'].map(bt => {
+        const inUse = usingTemplate && currentBodyType === bt && currentPlanSex() === sex;
+        return `<div class="info-card routine-card">
+          <div class="routine-info">
+            <div class="info-title">${BODY_TYPE_NAMES[bt]} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
+            <div class="info-body">${BODY_GUIDES[bt].subtitle}${sex === 'female' ? ' · glute & lower-body focus' : ''}</div>
+            <div class="seg" style="margin-top:10px" id="tpl-days-${sex}-${bt}">
+              ${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="${(inUse && getDaysPerWeek() === n) ? 'active' : ''}" onclick="useTemplate('${bt}',${n},'${sex}')">${n}</button>`).join('')}
+            </div>
+            <button class="ex-action-btn" style="margin-top:10px;width:100%" onclick="duplicateTemplate('${bt}','${sex}')">⧉ Duplicate &amp; customize</button>
           </div>
-        </div>
-        ${thumbFor(PLANS[bt][4][0].ex[0])}
-      </div>`;
+          ${thumbFor(planSetFor(sex)[bt][4][0].ex[0])}
+        </div>`;
+      }).join('');
+      return `<div class="seg-label" style="margin-top:14px">${heading}</div>${cards}`;
     }).join('');
   }
 }
@@ -113,22 +130,91 @@ function useRoutine(id) {
   updateProfileLabels();
 }
 
-function useTemplate(bt, days) {
+function useTemplate(bt, days, sex) {
   const profile = getProfile() || {};
   profile.bodyType = bt;
   profile.daysPerWeek = days;
   saveProfile(profile);
-  saveActive({ kind: 'template' });
+  // Remember an explicit cross-gender pick; otherwise the plan follows the profile's sex
+  const mySex = (profile.sex === 'female') ? 'female' : 'male';
+  saveActive(sex && sex !== mySex ? { kind: 'template', planSex: sex } : { kind: 'template' });
   renderRoutinesPage();
   applyBodyType(bt);
   updateProfileLabels();
 }
 
+// ---------- confirm sheet (are-you-sure prompt) ----------
+let confirmAction = null;
+
+function showConfirm(title, body, confirmLabel, action) {
+  confirmAction = action;
+  let el = document.getElementById('confirm-sheet');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'onboard-overlay';
+    el.id = 'confirm-sheet';
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `
+    <div class="onboard-title">${esc(title)}</div>
+    <div class="onboard-sub">${esc(body)}</div>
+    <div class="ex-actions">
+      <button class="ex-action-btn" style="background:#e87a50;color:#fff" onclick="confirmSheetYes()">${esc(confirmLabel)}</button>
+      <button class="ex-action-btn" onclick="closeConfirmSheet()">Cancel</button>
+    </div>`;
+  el.hidden = false;
+}
+
+function closeConfirmSheet() {
+  const el = document.getElementById('confirm-sheet');
+  if (el) el.hidden = true;
+  confirmAction = null;
+}
+
+function confirmSheetYes() {
+  const action = confirmAction;
+  closeConfirmSheet();
+  if (action) action();
+}
+
 function deleteRoutine(id) {
-  const active = getActive();
-  saveRoutines(getRoutines().filter(r => r.id !== id));
-  if (active && active.kind === 'custom' && active.routineId === id) saveActive({ kind: 'template' });
-  renderRoutinesPage();
+  const r = getRoutines().find(x => x.id === id);
+  const name = r ? r.name : 'this routine';
+  showConfirm(`Delete “${name}”?`, 'This permanently removes the routine. Exercises you logged stay in your history.', 'Delete routine', () => {
+    const active = getActive();
+    saveRoutines(getRoutines().filter(x => x.id !== id));
+    if (active && active.kind === 'custom' && active.routineId === id) saveActive({ kind: 'template' });
+    renderRoutinesPage();
+    applyBodyType(currentBodyType);
+  });
+}
+
+// ---------- duplicating ----------
+function duplicateRoutine(id) {
+  const r = getRoutines().find(x => x.id === id);
+  if (!r) return;
+  builderState = JSON.parse(JSON.stringify(r));
+  delete builderState.id;
+  builderState.name = `${r.name} (copy)`;
+  renderBuilder();
+  scrollToBuilder();
+}
+
+// Copy a recommended plan into the builder so it can be extended and saved as a custom routine
+function duplicateTemplate(bt, sex) {
+  const days = planSetFor(sex)[bt][getDaysPerWeek()];
+  builderState = {
+    name: `${BODY_TYPE_NAMES[bt]}${sex === 'female' ? ' (Women)' : ''} — my version`,
+    type: 'weekly',
+    days: days.map(d => ({ label: d.label, ex: d.ex.slice() }))
+  };
+  renderBuilder();
+  scrollToBuilder();
+}
+
+function scrollToBuilder() {
+  const el = document.getElementById('routine-builder');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ---------- builder ----------
@@ -171,10 +257,13 @@ function builderSetLabel(i, value) { builderState.days[i].label = value; }
 function builderSetName(value) { builderState.name = value; }
 
 function builderPickFor(i) {
+  // Checkbox multi-select: tapping a row toggles it in/out of the day
   openExercisePicker(key => {
-    if (!builderState.days[i].ex.includes(key)) builderState.days[i].ex.push(key);
+    const arr = builderState.days[i].ex;
+    const idx = arr.indexOf(key);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(key);
     renderBuilder(); // picker stays open for multi-add
-  });
+  }, key => builderState.days[i].ex.includes(key));
 }
 
 function builderRemoveEx(i, key) {
@@ -192,11 +281,70 @@ function builderMoveEx(i, key, dir) {
   renderBuilder();
 }
 
+// Saving is two-step: validate → preview (review/remove exercises) → confirm
 function saveBuilder() {
   const errEl = document.getElementById('builder-error');
   errEl.textContent = '';
   if (!builderState.name.trim()) { errEl.textContent = 'Give your routine a name.'; return; }
   if (builderState.days.some(d => !d.ex.length)) { errEl.textContent = 'Every day needs at least one exercise.'; return; }
+  openBuilderPreview();
+}
+
+function openBuilderPreview() {
+  let el = document.getElementById('builder-preview');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'onboard-overlay';
+    el.id = 'builder-preview';
+    document.body.appendChild(el);
+  }
+  const b = builderState;
+  el.innerHTML = `
+    <div class="onboard-title">Preview “${esc(b.name)}”</div>
+    <div class="onboard-sub">Check the routine over — remove anything you don't want, then confirm.</div>
+    ${b.days.map((d, i) => `
+      <div class="seg-label">${esc(d.label || `Day ${i + 1}`)} · ${d.ex.length} exercise${d.ex.length === 1 ? '' : 's'}</div>
+      ${d.ex.map(k => {
+        const ex = EXERCISES.find(e => e.key === k);
+        return ex ? `<div class="picker-row" style="cursor:default">
+          <img class="ex-thumb" src="${IMAGE_BASE + ex.img}" alt="" loading="lazy" style="width:40px;height:40px;border-radius:8px;object-fit:cover;margin-right:10px"/>
+          <span style="flex:1">${ex.name}<span class="picker-meta" style="display:block">${ex.sets} sets × ${ex.reps}</span></span>
+          <button class="milestone-del" onclick="previewRemoveEx(${i},'${k}')" aria-label="Remove ${ex.name}">✕</button>
+        </div>` : '';
+      }).join('')}`).join('')}
+    <div class="info-body" id="preview-error" style="margin-top:8px;color:#e87a50"></div>
+    <div class="ex-actions" style="margin-top:14px">
+      <button class="ex-action-btn" style="background:var(--primary);color:var(--on-primary)" onclick="confirmSaveBuilder()">Confirm &amp; save</button>
+      <button class="ex-action-btn" onclick="closeBuilderPreview()">Keep editing</button>
+    </div>`;
+  el.hidden = false;
+  el.scrollTop = 0;
+}
+
+function previewRemoveEx(i, key) {
+  builderState.days[i].ex = builderState.days[i].ex.filter(k => k !== key);
+  if (builderState.days.some(d => !d.ex.length)) {
+    // A day just became empty — flag it rather than allowing a broken save
+    openBuilderPreview();
+    const err = document.getElementById('preview-error');
+    if (err) err.textContent = 'A day has no exercises left — add some back or remove the day before saving.';
+  } else {
+    openBuilderPreview();
+  }
+  renderBuilder();
+}
+
+function closeBuilderPreview() {
+  const el = document.getElementById('builder-preview');
+  if (el) el.hidden = true;
+}
+
+function confirmSaveBuilder() {
+  if (builderState.days.some(d => !d.ex.length)) {
+    const err = document.getElementById('preview-error');
+    if (err) err.textContent = 'Every day needs at least one exercise — go back and fix the empty day.';
+    return;
+  }
   builderState.days = builderState.days.map((d, i) => ({
     chip: d.label || `Day ${i + 1}`,
     label: d.label || `Day ${i + 1}`,
@@ -208,11 +356,13 @@ function saveBuilder() {
     const idx = routines.findIndex(r => r.id === builderState.id);
     if (idx >= 0) routines[idx] = builderState; else routines.push(builderState);
   } else {
-    builderState.id = Date.now().toString(36);
+    // Random suffix so two saves in the same millisecond can't collide
+    builderState.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     routines.push(builderState);
   }
   saveRoutines(routines);
   builderState = null;
+  closeBuilderPreview();
   renderBuilder();
   renderRoutinesPage();
 }
@@ -249,7 +399,7 @@ function renderBuilder() {
     ${b.type === 'weekly' && b.days.length < 7 ? `<button class="ex-action-btn" style="width:100%;margin-top:10px" onclick="builderAddDay()">+ Add day</button>` : ''}
     <div class="info-body" id="builder-error" style="margin-top:8px;color:#e87a50"></div>
     <div class="ex-actions" style="margin-top:10px">
-      <button class="ex-action-btn" onclick="saveBuilder()" style="background:var(--primary);color:var(--on-primary)">Save routine</button>
+      <button class="ex-action-btn" onclick="saveBuilder()" style="background:var(--primary);color:var(--on-primary)">Preview &amp; save</button>
       <button class="ex-action-btn" onclick="cancelBuilder()">Cancel</button>
     </div>
   </div>`;
