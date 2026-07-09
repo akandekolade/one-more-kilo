@@ -6,6 +6,7 @@ let libSearch = '';
 
 const LIB_FILTERS = [
   { id: 'all', label: 'All' },
+  { id: 'home', label: '🏠 Home (no equipment)' },
   { id: 'badge-chest', label: 'Chest' },
   { id: 'badge-back', label: 'Back' },
   { id: 'badge-legs', label: 'Legs' },
@@ -38,7 +39,8 @@ function renderLibrary() {
   }
 
   const matches = EXERCISES.filter(ex => {
-    if (libFilter !== 'all' && ex.badgeClass !== libFilter) return false;
+    if (libFilter === 'home') { if (!ex.home) return false; }
+    else if (libFilter !== 'all' && ex.badgeClass !== libFilter) return false;
     if (libSearch && !ex.name.toLowerCase().includes(libSearch) && !ex.badge.toLowerCase().includes(libSearch)) return false;
     return true;
   }).sort((a, b) => a.name.localeCompare(b.name));

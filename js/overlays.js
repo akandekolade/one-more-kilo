@@ -4,10 +4,17 @@
 let pendingBodyType = null;
 let pendingDays = null;
 let pendingSex = null;
+let pendingPlace = null;
 
 function selectSexCard(s) {
   pendingSex = s;
   document.querySelectorAll('#onboard-sex button').forEach(b => b.classList.toggle('active', b.dataset.sex === s));
+  checkOnboardReady();
+}
+
+function selectPlaceCard(p) {
+  pendingPlace = p;
+  document.querySelectorAll('#onboard-place button').forEach(b => b.classList.toggle('active', b.dataset.place === p));
   checkOnboardReady();
 }
 
@@ -33,7 +40,7 @@ function checkOnboardReady() {
   const isSwitch = document.getElementById('onboard-overlay').dataset.mode === 'switch';
   btn.disabled = isSwitch
     ? !(pendingBodyType && pendingDays)
-    : !(pendingBodyType && pendingDays && pendingSex && name.value.trim() && age.value && h.value && w.value);
+    : !(pendingBodyType && pendingDays && pendingSex && pendingPlace && name.value.trim() && age.value && h.value && w.value);
 }
 
 function completeOnboarding() {
@@ -43,6 +50,11 @@ function completeOnboarding() {
     const profile = getProfile() || {};
     profile.bodyType = pendingBodyType;
     profile.daysPerWeek = pendingDays;
+    if (pendingPlace) {
+      profile.place = pendingPlace;
+      const a = getActive();
+      if (a && a.planPlace) { delete a.planPlace; saveActive(a); }
+    }
     saveProfile(profile);
     overlay.hidden = true;
     overlay.dataset.mode = '';
@@ -56,8 +68,8 @@ function completeOnboarding() {
   const w = parseFloat(document.getElementById('onboard-weight').value);
   const name = document.getElementById('onboard-name').value.trim();
   const age = parseInt(document.getElementById('onboard-age').value, 10);
-  if (!pendingBodyType || !pendingDays || !pendingSex || !name || !age || !h || !w) return;
-  saveProfile({ bodyType: pendingBodyType, daysPerWeek: pendingDays, heightCm: h, name, age, sex: pendingSex });
+  if (!pendingBodyType || !pendingDays || !pendingSex || !pendingPlace || !name || !age || !h || !w) return;
+  saveProfile({ bodyType: pendingBodyType, daysPerWeek: pendingDays, heightCm: h, name, age, sex: pendingSex, place: pendingPlace });
   const log = getWeightLog();
   log.push({ date: todayISO(), weight: w });
   saveWeightLog(log);
@@ -68,6 +80,8 @@ function completeOnboarding() {
 function openBodyTypePicker() {
   pendingBodyType = currentBodyType;
   pendingDays = getDaysPerWeek();
+  pendingPlace = currentPlanPlace();
+  document.querySelectorAll('#onboard-place button').forEach(b => b.classList.toggle('active', b.dataset.place === pendingPlace));
   const overlay = document.getElementById('onboard-overlay');
   document.getElementById('onboard-title').textContent = 'Switch plan';
   document.querySelectorAll('.bodytype-card').forEach(c => c.classList.toggle('selected', c.dataset.bt === currentBodyType));
@@ -94,6 +108,11 @@ const SHARED_OVERLAYS_HTML = `
     <button data-days="5" onclick="selectDaysCard(5)">5</button>
     <button data-days="6" onclick="selectDaysCard(6)">6</button>
     <button data-days="7" onclick="selectDaysCard(7)">7</button>
+  </div>
+  <div class="seg-label">Where will you train?</div>
+  <div class="seg" id="onboard-place" style="margin-bottom:16px">
+    <button data-place="gym" onclick="selectPlaceCard('gym')">🏋️ Gym</button>
+    <button data-place="home" onclick="selectPlaceCard('home')">🏠 Home (no equipment)</button>
   </div>
   <div class="seg-label">Body type</div>
   <div id="bodytype-picker">

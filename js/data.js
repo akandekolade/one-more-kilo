@@ -13,7 +13,7 @@ const EXERCISES = [
   { bodyType:'ecto', key:'barbell-back-squat', day:'legs', name:'Barbell back squat', badge:'Primary', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'5–7', rest:120, tip:'Break parallel. Brace your core hard. The king of mass builders for ectomorphs.', img:'Barbell_Squat/0.jpg' },
   { bodyType:'ecto', key:'romanian-deadlift', day:'legs', name:'Romanian deadlift', badge:'Hamstrings', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8–10', rest:90, tip:'Hinge at hips, soft knees. Feel the hamstring stretch before driving back up.', img:'Romanian_Deadlift/0.jpg' },
   { bodyType:'ecto', key:'leg-press', day:'legs', name:'Leg press', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:75, tip:"Feet hip-width mid-platform. Don't lock out knees at the top.", img:'Leg_Press/0.jpg' },
-  { bodyType:'ecto', key:'walking-lunges', day:'legs', name:'Walking lunges', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10 each', rest:60, tip:'Torso upright, front knee tracks over toe. Builds symmetry and glute size.', img:'Bodyweight_Walking_Lunge/0.jpg' },
+  { bodyType:'ecto', key:'walking-lunges', day:'legs', name:'Walking lunges', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10 each', rest:60, home:true, tip:'Torso upright, front knee tracks over toe. Builds symmetry and glute size.', img:'Bodyweight_Walking_Lunge/0.jpg' },
   { bodyType:'ecto', key:'standing-calf-raise', day:'legs', name:'Standing calf raise', badge:'Calves', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'15–20', rest:45, tip:'Full range of motion. Hold at the top 1 second. Calves respond to high reps.', img:'Standing_Calf_Raises/0.jpg' },
 
   { bodyType:'ecto', key:'lat-pulldown', day:'arms', name:'Lat pulldown', badge:'Back width', badgeClass:'badge-back', statColor:'c-arms', sets:4, reps:'8–10', rest:90, tip:'Pull to your upper chest, lead with the elbows, avoid leaning back excessively. Builds the back width that makes your waist look smaller.', img:'Wide-Grip_Lat_Pulldown/0.jpg' },
@@ -29,13 +29,13 @@ const EXERCISES = [
   { bodyType:'ecto', key:'dips', day:'full', name:'Dips', badge:'Chest + tris', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'8–10', rest:75, tip:'Lean forward for more chest. Add weight belt once bodyweight becomes easy.', img:'Dips_-_Chest_Version/0.jpg' },
   { bodyType:'ecto', key:'farmers-carry', day:'full', name:"Farmer's carry", badge:'Functional', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'30m', repsLabel:'Distance', rest:60, tip:'Heavy dumbbells, tall posture. Builds forearms, traps, and core simultaneously.', img:'Farmers_Walk/0.jpg' },
   { bodyType:'ecto', key:'hanging-leg-raise', day:'full', name:'Hanging leg raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:45, tip:'Curl your pelvis up at the top, control the descent, avoid swinging on the bar.', img:'Hanging_Leg_Raise/0.jpg' },
-  { bodyType:'ecto', key:'plank', day:'full', name:'Plank', badge:'Core', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'45–60s', repsLabel:'Hold', rest:45, tip:"Straight line from head to heels, brace like you're about to be punched.", img:'Plank/0.jpg' },
+  { bodyType:'ecto', key:'plank', day:'full', name:'Plank', badge:'Core', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'45–60s', repsLabel:'Hold', rest:45, home:true, tip:"Straight line from head to heels, brace like you're about to be punched.", img:'Plank/0.jpg' },
 
   { bodyType:'meso', key:'incline-barbell-bench-press', day:'chest', name:'Incline barbell bench press', badge:'Primary', badgeClass:'badge-chest', statColor:'c-chest', sets:4, reps:'8–10', rest:90, tip:'Mesomorphs respond fast to compound pressing — keep bar speed controlled and squeeze at lockout.', img:'Barbell_Incline_Bench_Press_-_Medium_Grip/0.jpg' },
   { bodyType:'meso', key:'seated-dumbbell-press', day:'chest', name:'Seated dumbbell press', badge:'Shoulders', badgeClass:'badge-sh', statColor:'c-chest', sets:3, reps:'8–10', rest:75, tip:'Back supported, press until arms lock without banging the dumbbells together.', img:'Seated_Dumbbell_Press/0.jpg' },
   { bodyType:'meso', key:'decline-bench-press', day:'chest', name:'Decline bench press', badge:'Lower chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'8–10', rest:75, tip:'Secure your legs, lower to the lower chest, drive up explosively.', img:'Decline_Barbell_Bench_Press/0.jpg' },
   { bodyType:'meso', key:'seated-lateral-raise', day:'chest', name:'Seated lateral raise', badge:'Side delts', badgeClass:'badge-sh', statColor:'c-chest', sets:3, reps:'10–12', rest:60, tip:'Seated removes any momentum — pure side delt isolation.', img:'Seated_Side_Lateral_Raise/0.jpg' },
-  { bodyType:'meso', key:'bench-dips', day:'chest', name:'Bench dips', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'10–12', rest:60, tip:'Keep elbows tracking straight back, not flaring, to protect the shoulders.', img:'Bench_Dips/0.jpg' },
+  { bodyType:'meso', key:'bench-dips', day:'chest', name:'Bench dips', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'10–12', rest:60, home:true, tip:'Keep elbows tracking straight back, not flaring, to protect the shoulders.', img:'Bench_Dips/0.jpg' },
 
   { bodyType:'meso', key:'front-squat', day:'legs', name:'Front squat', badge:'Primary', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'8–10', rest:90, tip:'Elbows high, torso upright. Quad-dominant alternative to the back squat.', img:'Front_Barbell_Squat/0.jpg' },
   { bodyType:'meso', key:'leg-extension', day:'legs', name:'Leg extension', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:60, tip:'Pause and squeeze at full extension, control the negative.', img:'Leg_Extensions/0.jpg' },
@@ -51,10 +51,10 @@ const EXERCISES = [
 
   { bodyType:'meso', key:'kettlebell-dead-clean', day:'full', name:'Kettlebell dead clean', badge:'Power', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'6–8 each', rest:75, tip:'Explosive hip drive, let the kettlebell float up to the shoulder.', img:'Kettlebell_Dead_Clean/0.jpg' },
   { bodyType:'meso', key:'box-jump', day:'full', name:'Box jump', badge:'Power', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'8–10', rest:60, tip:"Land soft, step down — don't jump down.", img:'Box_Jump_Multiple_Response/0.jpg' },
-  { bodyType:'meso', key:'russian-twist', day:'full', name:'Russian twist', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20 each', rest:45, tip:'Rotate from the torso, keep the feet off the ground for extra difficulty.', img:'Russian_Twist/0.jpg' },
-  { bodyType:'meso', key:'mountain-climbers', day:'full', name:'Mountain climbers', badge:'Conditioning', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:45, tip:'Keep hips low and drive the knees fast — this is a conditioning finisher.', img:'Mountain_Climbers/0.jpg' },
+  { bodyType:'meso', key:'russian-twist', day:'full', name:'Russian twist', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20 each', rest:45, home:true, tip:'Rotate from the torso, keep the feet off the ground for extra difficulty.', img:'Russian_Twist/0.jpg' },
+  { bodyType:'meso', key:'mountain-climbers', day:'full', name:'Mountain climbers', badge:'Conditioning', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:45, home:true, tip:'Keep hips low and drive the knees fast — this is a conditioning finisher.', img:'Mountain_Climbers/0.jpg' },
 
-  { bodyType:'endo', key:'pushups', day:'chest', name:'Push-ups', badge:'Chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'15–20', rest:30, tip:'Full range, body in a straight line. Elevate your feet to add difficulty as you progress.', img:'Pushups/0.jpg' },
+  { bodyType:'endo', key:'pushups', day:'chest', name:'Push-ups', badge:'Chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'15–20', rest:30, home:true, tip:'Full range, body in a straight line. Elevate your feet to add difficulty as you progress.', img:'Pushups/0.jpg' },
   { bodyType:'endo', key:'dumbbell-row', day:'chest', name:'Two-dumbbell row', badge:'Back', badgeClass:'badge-back', statColor:'c-chest', sets:3, reps:'15–20', rest:30, tip:'Flat back, squeeze at the top, keep the reps brisk to keep your heart rate up.', img:'Bent_Over_Two-Dumbbell_Row/0.jpg' },
   { bodyType:'endo', key:'dumbbell-shoulder-press', day:'chest', name:'Dumbbell shoulder press', badge:'Shoulders', badgeClass:'badge-sh', statColor:'c-chest', sets:3, reps:'15–20', rest:30, tip:'Seated or standing, controlled tempo, no locking out and resting at the top.', img:'Dumbbell_Shoulder_Press/0.jpg' },
   { bodyType:'endo', key:'tricep-kickback', day:'chest', name:'Tricep kickback', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'15–20', rest:30, tip:'Upper arm locked parallel to the floor, extend fully, squeeze.', img:'Tricep_Dumbbell_Kickback/0.jpg' },
@@ -69,11 +69,11 @@ const EXERCISES = [
   { bodyType:'endo', key:'kettlebell-thruster', day:'arms', name:'Kettlebell thruster', badge:'Full body', badgeClass:'badge-full', statColor:'c-arms', sets:3, reps:'12–15', rest:30, tip:'Squat into a press — one continuous, explosive motion.', img:'Kettlebell_Thruster/0.jpg' },
   { bodyType:'endo', key:'renegade-row', day:'arms', name:'Renegade row', badge:'Full body', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'10 each', rest:30, tip:'Wide stance for stability, minimize hip rotation as you row.', img:'Alternating_Renegade_Row/0.jpg' },
   { bodyType:'endo', key:'stationary-rowing', day:'arms', name:'Rowing machine', badge:'Cardio', badgeClass:'badge-core', statColor:'c-arms', sets:3, reps:'2 min', repsLabel:'Time', rest:30, tip:'Drive with the legs first, then lean back, then pull — reverse the order on the way in.', img:'Rowing_Stationary/0.jpg' },
-  { bodyType:'endo', key:'air-bike', day:'arms', name:'Air bike (bicycle crunch)', badge:'Core', badgeClass:'badge-core', statColor:'c-arms', sets:3, reps:'20 each', rest:30, tip:"Elbow to opposite knee, control the rotation, don't pull on your neck.", img:'Air_Bike/0.jpg' },
+  { bodyType:'endo', key:'air-bike', day:'arms', name:'Air bike (bicycle crunch)', badge:'Core', badgeClass:'badge-core', statColor:'c-arms', sets:3, reps:'20 each', rest:30, home:true, tip:"Elbow to opposite knee, control the rotation, don't pull on your neck.", img:'Air_Bike/0.jpg' },
 
-  { bodyType:'endo', key:'plank-endo', day:'full', name:'Plank', badge:'Core', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'45–60s', repsLabel:'Hold', rest:30, tip:'Straight line head to heels — a staple core-and-conditioning hold.', img:'Plank/0.jpg' },
-  { bodyType:'endo', key:'crunches', day:'full', name:'Crunches', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'20–25', rest:30, tip:'Small range of motion, keep the lower back pressed to the floor.', img:'Crunches/0.jpg' },
-  { bodyType:'endo', key:'side-plank-pushup', day:'full', name:'Push-up to side plank', badge:'Full body', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'10 each', rest:30, tip:'One push-up, then rotate into a side plank — combines strength and core in one move.', img:'Push_Up_to_Side_Plank/0.jpg' },
+  { bodyType:'endo', key:'plank-endo', day:'full', name:'Plank', badge:'Core', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'45–60s', repsLabel:'Hold', rest:30, home:true, tip:'Straight line head to heels — a staple core-and-conditioning hold.', img:'Plank/0.jpg' },
+  { bodyType:'endo', key:'crunches', day:'full', name:'Crunches', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'20–25', rest:30, home:true, tip:'Small range of motion, keep the lower back pressed to the floor.', img:'Crunches/0.jpg' },
+  { bodyType:'endo', key:'side-plank-pushup', day:'full', name:'Push-up to side plank', badge:'Full body', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'10 each', rest:30, home:true, tip:'One push-up, then rotate into a side plank — combines strength and core in one move.', img:'Push_Up_to_Side_Plank/0.jpg' },
   { bodyType:'endo', key:'treadmill-jog', day:'full', name:'Treadmill jog', badge:'Cardio', badgeClass:'badge-core', statColor:'c-full', sets:1, reps:'15–20 min', repsLabel:'Time', rest:60, tip:'Steady-state finisher — this is where the calorie deficit comes from.', img:'Jogging_Treadmill/0.jpg' },
 
   { key:'arnold-press', name:'Arnold press', badge:'Shoulders', badgeClass:'badge-sh', statColor:'c-arms', sets:3, reps:'10–12', rest:75, tip:'Rotate palms from facing you to facing forward as you press — hits all three delt heads.', img:'Arnold_Dumbbell_Press/0.jpg' },
@@ -82,35 +82,35 @@ const EXERCISES = [
   { key:'upright-row', name:'Upright row', badge:'Traps + delts', badgeClass:'badge-sh', statColor:'c-arms', sets:3, reps:'10–12', rest:60, tip:'Lead with the elbows, keep the bar close, stop at chin height.', img:'Upright_Barbell_Row/0.jpg' },
   { key:'treadmill-walk', name:'Treadmill walk', badge:'Recovery', badgeClass:'badge-core', statColor:'c-full', sets:1, reps:'30–40 min', repsLabel:'Time', rest:60, tip:'Brisk pace, upright posture — active recovery that speeds up muscle repair.', img:'Walking_Treadmill/0.jpg' },
   { key:'elliptical', name:'Elliptical', badge:'Cardio', badgeClass:'badge-core', statColor:'c-full', sets:1, reps:'15–20 min', repsLabel:'Time', rest:60, tip:'Low-impact steady cardio — keep a pace where you can still hold a conversation.', img:'Elliptical_Trainer/0.jpg' },
-  { key:'glute-bridge', name:'Glute bridge', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–20', rest:30, tip:'Drive through the heels, squeeze the glutes hard at the top for a second.', img:'Butt_Lift_Bridge/0.jpg' },
-  { key:'superman', name:'Superman', badge:'Lower back', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, tip:'Lift arms, chest, and legs together; squeeze your lower back at the top.', img:'Superman/0.jpg' },
+  { key:'glute-bridge', name:'Glute bridge', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–20', rest:30, home:true, tip:'Drive through the heels, squeeze the glutes hard at the top for a second.', img:'Butt_Lift_Bridge/0.jpg' },
+  { key:'superman', name:'Superman', badge:'Lower back', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, home:true, tip:'Lift arms, chest, and legs together; squeeze your lower back at the top.', img:'Superman/0.jpg' },
   { key:'preacher-curl', name:'Preacher curl', badge:'Biceps', badgeClass:'badge-arms', statColor:'c-arms', sets:3, reps:'10–12', rest:60, tip:'The pad removes all momentum — full stretch at the bottom, squeeze at the top.', img:'Preacher_Curl/0.jpg' },
   { key:'good-morning', name:'Good morning', badge:'Posterior chain', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:75, tip:'Light weight, hips back, flat back — hamstrings and lower back do the work.', img:'Good_Morning/0.jpg' },
-  { key:'cat-stretch', name:'Cat stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15s', repsLabel:'Hold', rest:15, tip:'Round the spine fully, let the head drop, breathe slowly.', img:'Cat_Stretch/0.jpg' },
-  { key:'hamstring-calf-stretch', name:'Hamstring & calf stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-legs', sets:2, reps:'20s each', repsLabel:'Hold', rest:15, tip:'Front leg straight, toes up, lean forward gently — never bounce.', img:'Standing_Hamstring_and_Calf_Stretch/0.jpg' },
-  { key:'chest-shoulder-stretch', name:'Chest & shoulder stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-chest', sets:2, reps:'20s', repsLabel:'Hold', rest:15, tip:'Wide grip on a stick or towel, lift up and behind your head slowly.', img:'Chest_And_Front_Of_Shoulder_Stretch/0.jpg' },
+  { key:'cat-stretch', name:'Cat stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15s', repsLabel:'Hold', rest:15, home:true, tip:'Round the spine fully, let the head drop, breathe slowly.', img:'Cat_Stretch/0.jpg' },
+  { key:'hamstring-calf-stretch', name:'Hamstring & calf stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-legs', sets:2, reps:'20s each', repsLabel:'Hold', rest:15, home:true, tip:'Front leg straight, toes up, lean forward gently — never bounce.', img:'Standing_Hamstring_and_Calf_Stretch/0.jpg' },
+  { key:'chest-shoulder-stretch', name:'Chest & shoulder stretch', badge:'Mobility', badgeClass:'badge-core', statColor:'c-chest', sets:2, reps:'20s', repsLabel:'Hold', rest:15, home:true, tip:'Wide grip on a stick or towel, lift up and behind your head slowly.', img:'Chest_And_Front_Of_Shoulder_Stretch/0.jpg' },
   { key:'seated-triceps-press', name:'Seated triceps press', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'10–12', rest:60, tip:'Elbows in and pointed at the ceiling; only the forearms move.', img:'Seated_Triceps_Press/0.jpg' },
   { key:'stationary-bike', name:'Stationary bike', badge:'Cardio', badgeClass:'badge-core', statColor:'c-full', sets:1, reps:'15–20 min', repsLabel:'Time', rest:60, tip:'Moderate resistance, steady cadence — easy on the joints.', img:'Bicycling_Stationary/0.jpg' },
-  { key:'reverse-crunch', name:'Reverse crunch', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, tip:'Roll the pelvis back and bring knees to chest — no swinging the legs.', img:'Reverse_Crunch/0.jpg' },
-  { key:'lying-leg-raise', name:'Lying leg raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:45, tip:'Legs straight, raise to 90 degrees, lower slowly without arching your back.', img:'Flat_Bench_Lying_Leg_Raise/0.jpg' },
+  { key:'reverse-crunch', name:'Reverse crunch', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, home:true, tip:'Roll the pelvis back and bring knees to chest — no swinging the legs.', img:'Reverse_Crunch/0.jpg' },
+  { key:'lying-leg-raise', name:'Lying leg raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:45, home:true, tip:'Legs straight, raise to 90 degrees, lower slowly without arching your back.', img:'Flat_Bench_Lying_Leg_Raise/0.jpg' },
   { key:'dumbbell-lunges', name:'Dumbbell lunges', badge:'Quads + glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10 each', rest:60, tip:'Torso upright, front shin vertical, push through the front heel.', img:'Dumbbell_Lunges/0.jpg' },
   { key:'barbell-lunge', name:'Barbell lunge', badge:'Unilateral', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8 each', rest:75, tip:'Heavier than dumbbell lunges — use a rack, keep the knee behind the toes.', img:'Barbell_Lunge/0.jpg' },
 
   // ---- expanded pool (free-exercise-db, CC0) ----
   { key:'hip-thrust', name:'Barbell hip thrust', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'8–12', rest:90, tip:'Chin tucked, ribs down, drive through the heels and squeeze hard at the top — the single best glute builder.', img:'Barbell_Hip_Thrust/0.jpg' },
   { key:'barbell-glute-bridge', name:'Barbell glute bridge', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:75, tip:'Bar over your hips (use a pad), full lockout at the top, one-second squeeze every rep.', img:'Barbell_Glute_Bridge/0.jpg' },
-  { key:'single-leg-glute-bridge', name:'Single-leg glute bridge', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12 each', rest:45, tip:'Push through one heel, hips level — fixes side-to-side glute imbalances.', img:'Single_Leg_Glute_Bridge/0.jpg' },
-  { key:'glute-kickback', name:'Glute kickback', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15 each', rest:45, tip:'On all fours, kick the heel to the ceiling and squeeze the glute at the top — no arching the lower back.', img:'Glute_Kickback/0.jpg' },
+  { key:'single-leg-glute-bridge', name:'Single-leg glute bridge', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12 each', rest:45, home:true, tip:'Push through one heel, hips level — fixes side-to-side glute imbalances.', img:'Single_Leg_Glute_Bridge/0.jpg' },
+  { key:'glute-kickback', name:'Glute kickback', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15 each', rest:45, home:true, tip:'On all fours, kick the heel to the ceiling and squeeze the glute at the top — no arching the lower back.', img:'Glute_Kickback/0.jpg' },
   { key:'cable-kickback', name:'Cable glute kickback', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12–15 each', rest:45, tip:'Ankle cuff on a low pulley — kick back and slightly up, control the return.', img:'One-Legged_Cable_Kickback/0.jpg' },
   { key:'hip-abduction-machine', name:'Hip abduction machine', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–20', rest:45, tip:'Push the pads apart with control and pause at the widest point — targets the glute medius for rounder hips.', img:'Thigh_Abductor/0.jpg' },
   { key:'hip-adduction-machine', name:'Hip adduction machine', badge:'Inner thigh', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–20', rest:45, tip:'Squeeze the pads together smoothly — inner-thigh strength balances the abduction work.', img:'Thigh_Adductor/0.jpg' },
   { key:'sumo-deadlift', name:'Sumo deadlift', badge:'Glutes + hams', badgeClass:'badge-legs', statColor:'c-legs', sets:4, reps:'6–8', rest:120, tip:'Wide stance, toes out, knees tracking over toes — more glutes and inner thigh than a conventional pull.', img:'Sumo_Deadlift/0.jpg' },
   { key:'plie-squat', name:'Sumo (plié) squat', badge:'Inner thigh', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12–15', rest:60, tip:'Wide stance, toes out 45°, torso tall — hits inner thighs and glutes.', img:'Plie_Dumbbell_Squat/0.jpg' },
   { key:'barbell-step-ups', name:'Barbell step-ups', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8 each', rest:75, tip:'Drive through the lead heel and stand fully tall on the box before stepping down.', img:'Barbell_Step_Ups/0.jpg' },
-  { key:'step-up-knee-raise', name:'Step-up with knee raise', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12 each', rest:45, tip:'Step up and drive the trailing knee to hip height — glutes plus balance and core in one move.', img:'Step-up_with_Knee_Raise/0.jpg' },
+  { key:'step-up-knee-raise', name:'Step-up with knee raise', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12 each', rest:45, home:true, tip:'Step up and drive the trailing knee to hip height — glutes plus balance and core in one move.', img:'Step-up_with_Knee_Raise/0.jpg' },
   { key:'kneeling-squat', name:'Kneeling squat', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12–15', rest:60, tip:'From your knees, sit back to your heels then thrust the hips forward and squeeze — pure glute hinge.', img:'Kneeling_Squat/0.jpg' },
-  { key:'bodyweight-squat', name:'Bodyweight squat', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–25', rest:30, tip:'Full depth, chest up, weight in the heels — master this before loading up.', img:'Bodyweight_Squat/0.jpg' },
-  { key:'jump-squat', name:'Jump squat', badge:'Power', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:45, tip:'Explode up, land soft with bent knees, sink straight into the next rep.', img:'Freehand_Jump_Squat/0.jpg' },
+  { key:'bodyweight-squat', name:'Bodyweight squat', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15–25', rest:30, home:true, tip:'Full depth, chest up, weight in the heels — master this before loading up.', img:'Bodyweight_Squat/0.jpg' },
+  { key:'jump-squat', name:'Jump squat', badge:'Power', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:45, home:true, tip:'Explode up, land soft with bent knees, sink straight into the next rep.', img:'Freehand_Jump_Squat/0.jpg' },
   { key:'dumbbell-squat', name:'Dumbbell squat', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:60, tip:'Dumbbells at your sides, sit between your heels — a joint-friendly squat variation.', img:'Dumbbell_Squat/0.jpg' },
   { key:'hack-squat', name:'Hack squat', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'10–12', rest:90, tip:'Back flat on the pad, lower to 90° and drive through mid-foot — quad growth without balancing a bar.', img:'Hack_Squat/0.jpg' },
   { key:'smith-machine-squat', name:'Smith machine squat', badge:'Quads', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8–10', rest:90, tip:'Feet slightly in front of the bar path, brace and sit straight down — great for learning depth safely.', img:'Smith_Machine_Squat/0.jpg' },
@@ -127,7 +127,7 @@ const EXERCISES = [
   { key:'smith-bench-press', name:'Smith machine bench press', badge:'Chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'8–10', rest:90, tip:'Fixed bar path lets you press heavy without a spotter — touch mid-chest, drive up.', img:'Smith_Machine_Bench_Press/0.jpg' },
   { key:'wide-grip-bench-press', name:'Wide-grip bench press', badge:'Outer chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'8–10', rest:90, tip:'Hands well outside shoulder width shifts work from triceps to chest — lower with control.', img:'Wide-Grip_Barbell_Bench_Press/0.jpg' },
   { key:'chin-up', name:'Chin-up', badge:'Back + biceps', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'6–10', rest:90, tip:'Underhand grip brings the biceps into the pull — chest to the bar, full hang at the bottom.', img:'Chin-Up/0.jpg' },
-  { key:'inverted-row', name:'Inverted row', badge:'Back', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'10–15', rest:60, tip:'Body straight like a reverse plank, pull your chest to the bar — scale by walking your feet in or out.', img:'Inverted_Row/0.jpg' },
+  { key:'inverted-row', name:'Inverted row', badge:'Back', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'10–15', rest:60, home:true, tip:'Body straight like a reverse plank, pull your chest to the bar — scale by walking your feet in or out.', img:'Inverted_Row/0.jpg' },
   { key:'straight-arm-pulldown', name:'Straight-arm pulldown', badge:'Lats', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'12–15', rest:60, tip:'Arms nearly straight, sweep the bar down to your thighs — pure lat isolation, no biceps.', img:'Straight-Arm_Pulldown/0.jpg' },
   { key:'rack-pull', name:'Rack pull', badge:'Upper back', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'5–8', rest:120, tip:'A deadlift from knee height — overload the top half and build traps and grip.', img:'Rack_Pulls/0.jpg' },
   { key:'dumbbell-pullover', name:'Dumbbell pullover', badge:'Lats + chest', badgeClass:'badge-back', statColor:'c-arms', sets:3, reps:'10–12', rest:60, tip:'Hips low, big stretch behind your head, pull the weight over in an arc with your lats.', img:'Bent-Arm_Dumbbell_Pullover/0.jpg' },
@@ -146,14 +146,31 @@ const EXERCISES = [
   { key:'kettlebell-swing', name:'Kettlebell swing', badge:'Power', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'15–20', rest:60, tip:'A hip hinge, not a squat — snap the hips forward and let the bell float to chest height.', img:'One-Arm_Kettlebell_Swings/0.jpg' },
   { key:'battle-ropes', name:'Battle ropes', badge:'Conditioning', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:30, tip:'Alternate arms in fast waves, knees soft, core braced — a brutal low-impact finisher.', img:'Battling_Ropes/0.jpg' },
   { key:'sled-push', name:'Sled push', badge:'Conditioning', badgeClass:'badge-full', statColor:'c-full', sets:4, reps:'20m', repsLabel:'Distance', rest:60, tip:'Low body angle, arms locked, drive with short powerful steps.', img:'Sled_Push/0.jpg' },
-  { key:'sit-up', name:'Sit-up', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20', rest:30, tip:'Curl up one vertebra at a time, exhale at the top — no yanking on your neck.', img:'Sit-Up/0.jpg' },
-  { key:'oblique-crunch', name:'Oblique crunch', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15 each', rest:30, tip:'Crunch up and across, elbow toward the opposite knee — carves the waistline.', img:'Oblique_Crunches/0.jpg' },
-  { key:'side-plank', name:'Side plank', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s each', repsLabel:'Hold', rest:30, tip:'Straight line from head to feet, hips high — don’t let them sag.', img:'Side_Bridge/0.jpg' },
-  { key:'jackknife-situp', name:'Jackknife sit-up', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, tip:'Lift legs and torso together, reach for your toes at the top — full-length ab contraction.', img:'Jackknife_Sit-Up/0.jpg' },
+  { key:'sit-up', name:'Sit-up', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20', rest:30, home:true, tip:'Curl up one vertebra at a time, exhale at the top — no yanking on your neck.', img:'Sit-Up/0.jpg' },
+  { key:'oblique-crunch', name:'Oblique crunch', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15 each', rest:30, home:true, tip:'Crunch up and across, elbow toward the opposite knee — carves the waistline.', img:'Oblique_Crunches/0.jpg' },
+  { key:'side-plank', name:'Side plank', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s each', repsLabel:'Hold', rest:30, home:true, tip:'Straight line from head to feet, hips high — don’t let them sag.', img:'Side_Bridge/0.jpg' },
+  { key:'jackknife-situp', name:'Jackknife sit-up', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, home:true, tip:'Lift legs and torso together, reach for your toes at the top — full-length ab contraction.', img:'Jackknife_Sit-Up/0.jpg' },
   { key:'ball-crunch', name:'Exercise ball crunch', badge:'Abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20', rest:30, tip:'The ball lets your abs stretch below neutral before every crunch — bigger range, better results.', img:'Exercise_Ball_Crunch/0.jpg' },
-  { key:'flutter-kicks', name:'Flutter kicks', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:30, tip:'Lower back pressed down, small fast alternating kicks with straight legs.', img:'Flutter_Kicks/0.jpg' },
-  { key:'scissor-kicks', name:'Scissor kicks', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20', rest:30, tip:'Legs straight and low, cross them alternately — keep your lower back glued to the floor.', img:'Scissor_Kick/0.jpg' },
-  { key:'bent-knee-hip-raise', name:'Bent-knee hip raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, tip:'Curl the knees to your chest by rolling the pelvis up — slow and controlled.', img:'Bent-Knee_Hip_Raise/0.jpg' }
+  { key:'flutter-kicks', name:'Flutter kicks', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:30, home:true, tip:'Lower back pressed down, small fast alternating kicks with straight legs.', img:'Flutter_Kicks/0.jpg' },
+  { key:'scissor-kicks', name:'Scissor kicks', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'15–20', rest:30, home:true, tip:'Legs straight and low, cross them alternately — keep your lower back glued to the floor.', img:'Scissor_Kick/0.jpg' },
+  { key:'bent-knee-hip-raise', name:'Bent-knee hip raise', badge:'Lower abs', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12–15', rest:30, home:true, tip:'Curl the knees to your chest by rolling the pelvis up — slow and controlled.', img:'Bent-Knee_Hip_Raise/0.jpg' },
+
+  // ---- home / no-equipment additions ----
+  { key:'incline-pushup', name:'Incline push-up', badge:'Chest (easier)', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'12–15', rest:45, home:true, tip:'Hands on a couch, table or wall — the higher the surface, the easier. Perfect for building toward floor push-ups.', img:'Incline_Push-Up/0.jpg' },
+  { key:'decline-pushup', name:'Decline push-up', badge:'Upper chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'10–15', rest:60, home:true, tip:'Feet up on a chair or couch, hands on the floor — shifts the work to the upper chest and shoulders.', img:'Decline_Push-Up/0.jpg' },
+  { key:'wide-pushup', name:'Wide push-up', badge:'Outer chest', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'12–15', rest:45, home:true, tip:'Hands well outside shoulder width — more chest, less triceps.', img:'Push-Up_Wide/0.jpg' },
+  { key:'close-grip-pushup', name:'Close-grip push-up', badge:'Triceps', badgeClass:'badge-tri', statColor:'c-chest', sets:3, reps:'10–15', rest:45, home:true, tip:'Hands under your shoulders, elbows brushing your ribs on the way down — the home tricep builder.', img:'Push-Ups_-_Close_Triceps_Position/0.jpg' },
+  { key:'plyo-pushup', name:'Plyo push-up', badge:'Power', badgeClass:'badge-chest', statColor:'c-chest', sets:3, reps:'6–10', rest:60, home:true, tip:'Push explosively so your hands leave the floor, land soft — power work with zero equipment.', img:'Plyo_Push-up/0.jpg' },
+  { key:'split-squat', name:'Split squat', badge:'Quads + glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'12 each', rest:45, home:true, tip:'Long stance, drop the back knee straight down, front heel does the work.', img:'Split_Squats/0.jpg' },
+  { key:'split-jump', name:'Split (lunge) jump', badge:'Power', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'8 each', rest:45, home:true, tip:'Lunge, jump, switch legs mid-air, land soft in a lunge — power and burn in one move.', img:'Split_Jump/0.jpg' },
+  { key:'star-jump', name:'Star jump', badge:'Cardio', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:30, home:true, tip:'Explode up, arms and legs out like a star, land soft and sink into the next rep.', img:'Star_Jump/0.jpg' },
+  { key:'butt-kicks', name:'Butt kicks', badge:'Cardio', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'30s', repsLabel:'Time', rest:30, home:true, tip:'Jump and kick both heels to your glutes — quick, springy conditioning.', img:'Double_Leg_Butt_Kick/0.jpg' },
+  { key:'dead-bug', name:'Dead bug', badge:'Core control', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'10 each', rest:30, home:true, tip:'Lower back pressed into the floor, extend opposite arm and leg slowly — anti-extension core work.', img:'Dead_Bug/0.jpg' },
+  { key:'cross-body-crunch', name:'Cross-body crunch', badge:'Obliques', badgeClass:'badge-core', statColor:'c-full', sets:3, reps:'12 each', rest:30, home:true, tip:'Elbow to opposite knee, rotate through the torso, no neck pulling.', img:'Cross-Body_Crunch/0.jpg' },
+  { key:'side-leg-raise', name:'Side-lying leg raise', badge:'Outer thigh', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15 each', rest:30, home:true, tip:'Lie on your side, lift the top leg with control and lower slow — outer thigh and glute medius.', img:'Side_Leg_Raises/0.jpg' },
+  { key:'inchworm', name:'Inchworm', badge:'Full body', badgeClass:'badge-full', statColor:'c-full', sets:3, reps:'8–10', rest:30, home:true, tip:'Fold, walk your hands out to a plank, walk them back — warms up hamstrings, core and shoulders.', img:'Inchworm/0.jpg' },
+  { key:'kneeling-leg-lift', name:'Kneeling leg lift', badge:'Glutes', badgeClass:'badge-legs', statColor:'c-legs', sets:3, reps:'15 each', rest:30, home:true, tip:'On all fours, lift one bent leg back and up, squeeze the glute at the top — no lower-back arch.', img:'Leg_Lift/0.jpg' },
+  { key:'handstand-pushup', name:'Handstand push-up (wall)', badge:'Shoulders (adv.)', badgeClass:'badge-sh', statColor:'c-arms', sets:3, reps:'5–8', rest:90, home:true, tip:'Kick up against a wall, lower your head toward the floor with control — an advanced shoulder press with just bodyweight.', img:'Handstand_Push-Ups/0.jpg' }
 ];
 
 // Written form cues per exercise, sourced from the free-exercise-db (CC0) dataset
@@ -294,7 +311,22 @@ const EXERCISE_STEPS = {
   'ball-crunch': ['Lie on an exercise ball with your lower back curvature pressed against the spherical surface of the ball. Your feet should be bent at the knee and pressed firmly against the floor. The upper torso should be hanging off the top of the ball. The arms should either be kept alongside the body or crossed on top of your chest as these positions avoid neck strains (as opposed to the hands behind the back of the head position).','Lower your torso into a stretch position keeping the neck stationary at all times. This will be your starting position.','With the hips stationary, flex the waist by contracting the abdominals and curl the shoulders and trunk upward until you feel a nice contraction on your abdominals. The arms should simply slide up the side of your legs if you have them at the side or just stay on top of your chest if you have them crossed. The lower back should always stay in contact with the ball. Exhale as you perform this movement and hold the contraction for a second.','As you inhale, go back to the starting position.','Repeat for the recommended amount of repetitions.'],
   'flutter-kicks': ['On a flat bench lie facedown with the hips on the edge of the bench, the legs straight with toes high off the floor and with the arms on top of the bench holding on to the front edge.','Squeeze your glutes and hamstrings and straighten the legs until they are level with the hips. This will be your starting position.','Start the movement by lifting the left leg higher than the right leg.','Then lower the left leg as you lift the right leg.','Continue alternating in this manner (as though you are doing a flutter kick in water) until you have done the recommended amount of repetitions for each leg. Make sure that you keep a controlled movement at all times. Tip: You will breathe normally as you perform this movement.'],
   'scissor-kicks': ['To begin, lie down with your back pressed against the floor or on an exercise mat (optional). Your arms should be fully extended to the sides with your palms facing down. Note: The arms should be stationary the entire time.','With a slight bend at the knees, lift your legs up so that your heels are about 6 inches off the ground. This is the starting position.','Now lift your left leg up to about a 45 degree angle while your right leg is lowered until the heel is about 2-3 inches from the ground.','Switch movements by raising your right leg up and lowering your left leg. Remember to breathe while performing this exercise.','Repeat for the recommended amount of repetitions.'],
-  'bent-knee-hip-raise': ['Lay flat on the floor with your arms next to your sides.','Now bend your knees at around a 75 degree angle and lift your feet off the floor by around 2 inches.','Using your lower abs, bring your knees in towards you as you maintain the 75 degree angle bend in your legs. Continue this movement until you raise your hips off of the floor by rolling your pelvis backward. Breathe out as you perform this portion of the movement. Tip: At the end of the movement your knees will be over your chest.','Squeeze your abs at the top of the movement for a second and then return to the starting position slowly as you breathe in. Tip: Maintain a controlled motion at all times.','Repeat for the recommended amount of repetitions.']
+  'bent-knee-hip-raise': ['Lay flat on the floor with your arms next to your sides.','Now bend your knees at around a 75 degree angle and lift your feet off the floor by around 2 inches.','Using your lower abs, bring your knees in towards you as you maintain the 75 degree angle bend in your legs. Continue this movement until you raise your hips off of the floor by rolling your pelvis backward. Breathe out as you perform this portion of the movement. Tip: At the end of the movement your knees will be over your chest.','Squeeze your abs at the top of the movement for a second and then return to the starting position slowly as you breathe in. Tip: Maintain a controlled motion at all times.','Repeat for the recommended amount of repetitions.'],
+  'incline-pushup': ['Stand facing bench or sturdy elevated platform. Place hands on edge of bench or platform, slightly wider than shoulder width.','Position forefoot back from bench or platform with arms and body straight. Arms should be perpendicular to body. Keeping body straight, lower chest to edge of box or platform by bending arms.','Push body up until arms are extended. Repeat.'],
+  'decline-pushup': ['Lie on the floor face down and place your hands about 36 inches apart while holding your torso up at arms length. Move your feet up to a box or bench. This will be your starting position.','Next, lower yourself downward until your chest almost touches the floor as you inhale.','Now breathe out and press your upper body back up to the starting position while squeezing your chest.','After a brief pause at the top contracted position, you can begin to lower yourself downward again for as many repetitions as needed.'],
+  'wide-pushup': ['With your hands wide apart, support your body on your toes and hands in a plank position. Your elbows should be extended and your body straight. Do not allow your hips to sag. This will be your starting position.','To begin, allow the elbows to flex, lowering your chest to the floor as you inhale.','Using your pectoral muscles, press your upper body back up to the starting position by extending the elbows. Exhale as you perform this step.','After pausing at the contracted position, repeat the movement for the prescribed amount of repetitions.'],
+  'close-grip-pushup': ['Lie on the floor face down and place your hands closer than shoulder width for a close hand position. Make sure that you are holding your torso up at arms\' length.','Lower yourself until your chest almost touches the floor as you inhale.','Using your triceps and some of your pectoral muscles, press your upper body back up to the starting position and squeeze your chest. Breathe out as you perform this step.','After a second pause at the contracted position, repeat the movement for the prescribed amount of repetitions.'],
+  'plyo-pushup': ['Move into a prone position on the floor, supporting your weight on your hands and toes.','Your arms should be fully extended with the hands around shoulder width. Keep your body straight throughout the movement. This will be your starting position.','Descend by flexing at the elbow, lowering your chest towards the ground.','At the bottom, reverse the motion by pushing yourself up through elbow extension as quickly as possible. Attempt to push your upper body up until your hands leave the ground.','Return to the starting position and repeat the exercise.','For added difficulty, add claps into the movement while you are air borne.'],
+  'split-squat': ['Being in a standing position. Jump into a split leg position, with one leg forward and one leg back, flexing the knees and lowering your hips slightly as you do so.','As you descend, immediately reverse direction, standing back up and jumping, reversing the position of your legs. Repeat 5-10 times on each leg.'],
+  'split-jump': ['Assume a lunge stance position with one foot forward with the knee bent, and the rear knee nearly touching the ground.','Ensure that the front knee is over the midline of the foot.','Extending through both legs, jump as high as possible, swinging your arms to gain lift.','As you jump, bring your feet together, and move them back to their initial positions as you land.','Absorb the impact by reverting back to the starting position.'],
+  'star-jump': ['Begin in a relaxed stance with your feet shoulder width apart and hold your arms close to the body.','To initiate the move, squat down halfway and explode back up as high as possible. Fully extend your entire body, spreading your legs and arms away from the body.','As you land, bring your limbs back in and absorb your impact through the legs.'],
+  'butt-kicks': ['Begin standing with your knees slightly bent.','Quickly squat a short distance, flexing the hips and knees, and immediately extend to jump for maximum vertical height.','As you go up, tuck your heels by flexing the knees, attempting to touch the buttocks.','Finish the motion by landing with the knees only partially bent, using your legs to absorb the impact.'],
+  'dead-bug': ['Begin lying on your back with your hands extended above you toward the ceiling.','Bring your feet, knees, and hips up to 90 degrees.','Exhale hard to bring your ribcage down and flatten your back onto the floor, rotating your pelvis up and squeezing your glutes. Hold this position throughout the movement. This will be your starting position.','Initiate the exercise by extending one leg, straightening the knee and hip to bring the leg just above the ground.','Maintain the position of your lumbar and pelvis as you perform the movement, as your back is going to want to arch.','Stay tight and return the working leg to the starting position.','Repeat on the opposite side, alternating until the set is complete.'],
+  'cross-body-crunch': ['Lie flat on your back and bend your knees about 60 degrees.','Keep your feet flat on the floor and place your hands loosely behind your head. This will be your starting position.','Now curl up and bring your right elbow and shoulder across your body while bring your left knee in toward your left shoulder at the same time. Reach with your elbow and try to touch your knee. Exhale as you perform this movement. Tip: Try to bring your shoulder up towards your knee rather than just your elbow and remember that the key is to contract the abs as you perform the movement; not just to move the elbow.','Now go back down to the starting position as you inhale and repeat with the left elbow and the right knee.','Continue alternating in this manner until all prescribed repetitions are done.'],
+  'side-leg-raise': ['Stand next to a chair, which you may hold onto as a support. Stand on one leg. This will be your starting position.','Keeping your leg straight, raise it as far out to the side as possible, and swing it back down, allowing it to cross the opposite leg.','Repeat this swinging motion 5-10 times, increasing the range of motion as you do so.'],
+  'inchworm': ['Stand with your feet close together. Keeping your legs straight, stretch down and put your hands on the floor directly in front of you. This will be your starting position.','Begin by walking your hands forward slowly, alternating your left and your right. As you do so, bend only at the hip, keeping your legs straight.','Keep going until your body is parallel to the ground in a pushup position.','Now, keep your hands in place and slowly take short steps with your feet, moving only a few inches at a time.','Continue walking until your feet are by hour hands, keeping your legs straight as you do so.'],
+  'kneeling-leg-lift': ['While standing up straight with both feet next to each other at around shoulder width, grab a sturdy surface such as the sides of a squat rack or the top of a chair to brace yourself and keep balance.','With or without an ankle weight, lift one leg behind you as if performing a leg curl but standing up while keeping the other leg straight. Breathe out as you perform this movement.','Slowly bring the raised leg back to the floor as you breathe in.','Repeat for the recommended amount of repetitions.','Repeat the movement with the opposite leg.'],
+  'handstand-pushup': ['With your back to the wall bend at the waist and place both hands on the floor at shoulder width.','Kick yourself up against the wall with your arms straight. Your body should be upside down with the arms and legs fully extended. Keep your whole body as straight as possible. Tip: If doing this for the first time, have a spotter help you. Also, make sure that you keep facing the wall with your head, rather than looking down.','Slowly lower yourself to the ground as you inhale until your head almost touches the floor. Tip: It is of utmost importance that you come down slow in order to avoid head injury.','Push yourself back up slowly as you exhale until your elbows are nearly locked.','Repeat for the recommended amount of repetitions.']
 };
 
 let currentBodyType = 'ecto';
@@ -573,6 +605,280 @@ const PLANS_F = {
   }
 };
 
+// PLANS_HOME[bodyType][daysPerWeek] — men's home programs: no equipment needed
+// (a chair, stairs or a sturdy table at most).
+const PLANS_HOME = {
+  ecto: {
+    1: [
+      { chip:'Full Body', label:'Full-Body Home Strength', color:'full', ex:['pushups','bodyweight-squat','inverted-row','split-squat','plank'] }
+    ],
+    2: [
+      { chip:'Upper', label:'Upper Body Push & Pull', color:'chest', ex:['pushups','decline-pushup','close-grip-pushup','inverted-row','side-plank'] },
+      { chip:'Lower', label:'Legs & Core', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','single-leg-glute-bridge','plank'] }
+    ],
+    3: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','wide-pushup','close-grip-pushup'] },
+      { chip:'Legs', label:'Legs', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'full', ex:['inverted-row','superman','plank','lying-leg-raise'] }
+    ],
+    4: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','wide-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','single-leg-glute-bridge'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'arms', ex:['inverted-row','superman','dead-bug','side-plank'] },
+      { chip:'Power', label:'Power & Conditioning', color:'full', ex:['plyo-pushup','jump-squat','split-jump','mountain-climbers'] }
+    ],
+    5: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','wide-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','single-leg-glute-bridge'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'arms', ex:['inverted-row','superman','dead-bug','side-plank'] },
+      { chip:'Power', label:'Power & Conditioning', color:'full', ex:['plyo-pushup','jump-squat','split-jump','mountain-climbers'] },
+      { chip:'Core', label:'Core Day', color:'core', ex:['sit-up','russian-twist','lying-leg-raise','cross-body-crunch','plank'] }
+    ],
+    6: [
+      { chip:'Push A', label:'Push A', color:'chest', ex:['pushups','wide-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs A', label:'Legs A', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Pull & Core A', label:'Pull & Core A', color:'arms', ex:['inverted-row','superman','plank','lying-leg-raise'] },
+      { chip:'Push B', label:'Push B — Harder', color:'chest', ex:['decline-pushup','plyo-pushup','side-plank-pushup','handstand-pushup'] },
+      { chip:'Legs B', label:'Legs B — Power', color:'legs', ex:['jump-squat','split-jump','step-up-knee-raise','single-leg-glute-bridge'] },
+      { chip:'Core B', label:'Core B', color:'core', ex:['sit-up','russian-twist','dead-bug','cross-body-crunch'] }
+    ],
+    7: [
+      { chip:'Push A', label:'Push A', color:'chest', ex:['pushups','wide-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs A', label:'Legs A', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Pull & Core A', label:'Pull & Core A', color:'arms', ex:['inverted-row','superman','plank','lying-leg-raise'] },
+      { chip:'Push B', label:'Push B — Harder', color:'chest', ex:['decline-pushup','plyo-pushup','side-plank-pushup','handstand-pushup'] },
+      { chip:'Legs B', label:'Legs B — Power', color:'legs', ex:['jump-squat','split-jump','step-up-knee-raise','single-leg-glute-bridge'] },
+      { chip:'Core B', label:'Core B', color:'core', ex:['sit-up','russian-twist','dead-bug','cross-body-crunch'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  },
+  meso: {
+    1: [
+      { chip:'Total Body', label:'Total-Body Home Session', color:'full', ex:['pushups','bodyweight-squat','inverted-row','split-jump','russian-twist'] }
+    ],
+    2: [
+      { chip:'Strength', label:'Full-Body Strength', color:'chest', ex:['pushups','close-grip-pushup','bodyweight-squat','split-squat','inverted-row'] },
+      { chip:'Power & Core', label:'Power & Core', color:'legs', ex:['jump-squat','plyo-pushup','mountain-climbers','russian-twist','plank'] }
+    ],
+    3: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs & Power', label:'Legs & Power', color:'legs', ex:['bodyweight-squat','split-squat','jump-squat','split-jump'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'full', ex:['inverted-row','superman','russian-twist','dead-bug'] }
+    ],
+    4: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'arms', ex:['inverted-row','superman','dead-bug','side-plank'] },
+      { chip:'Conditioning', label:'Conditioning', color:'full', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] }
+    ],
+    5: [
+      { chip:'Push', label:'Push Day', color:'chest', ex:['pushups','decline-pushup','close-grip-pushup','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Pull & Core', label:'Pull & Core', color:'arms', ex:['inverted-row','superman','dead-bug','side-plank'] },
+      { chip:'Conditioning', label:'Conditioning', color:'full', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] },
+      { chip:'Core', label:'Core Day', color:'core', ex:['sit-up','russian-twist','cross-body-crunch','lying-leg-raise','plank'] }
+    ],
+    6: [
+      { chip:'Push A', label:'Push A', color:'chest', ex:['pushups','wide-pushup','bench-dips','close-grip-pushup'] },
+      { chip:'Legs A', label:'Legs A', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Pull & Core A', label:'Pull & Core A', color:'arms', ex:['inverted-row','superman','plank','dead-bug'] },
+      { chip:'Push B', label:'Push B', color:'chest', ex:['decline-pushup','plyo-pushup','side-plank-pushup','handstand-pushup'] },
+      { chip:'Legs B', label:'Legs B — Power', color:'legs', ex:['jump-squat','split-jump','step-up-knee-raise','star-jump'] },
+      { chip:'Core B', label:'Core & Conditioning', color:'core', ex:['mountain-climbers','russian-twist','cross-body-crunch','side-plank'] }
+    ],
+    7: [
+      { chip:'Push A', label:'Push A', color:'chest', ex:['pushups','wide-pushup','bench-dips','close-grip-pushup'] },
+      { chip:'Legs A', label:'Legs A', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Pull & Core A', label:'Pull & Core A', color:'arms', ex:['inverted-row','superman','plank','dead-bug'] },
+      { chip:'Push B', label:'Push B', color:'chest', ex:['decline-pushup','plyo-pushup','side-plank-pushup','handstand-pushup'] },
+      { chip:'Legs B', label:'Legs B — Power', color:'legs', ex:['jump-squat','split-jump','step-up-knee-raise','star-jump'] },
+      { chip:'Core B', label:'Core & Conditioning', color:'core', ex:['mountain-climbers','russian-twist','cross-body-crunch','side-plank'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  },
+  endo: {
+    1: [
+      { chip:'Full Circuit', label:'Full-Body Burn Circuit', color:'full', ex:['bodyweight-squat','pushups','star-jump','mountain-climbers','plank-endo'] }
+    ],
+    2: [
+      { chip:'Strength', label:'Full-Body Strength', color:'chest', ex:['bodyweight-squat','pushups','split-squat','inverted-row','plank-endo'] },
+      { chip:'Cardio Circuit', label:'Cardio Circuit', color:'core', ex:['star-jump','butt-kicks','mountain-climbers','jump-squat','crunches'] }
+    ],
+    3: [
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','incline-pushup','close-grip-pushup','inverted-row'] },
+      { chip:'Lower', label:'Lower Body', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['star-jump','butt-kicks','mountain-climbers','crunches'] }
+    ],
+    4: [
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','incline-pushup','close-grip-pushup','bench-dips','inverted-row'] },
+      { chip:'Lower', label:'Lower Body', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge','step-up-knee-raise'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'arms', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] },
+      { chip:'Core & Cardio', label:'Core & Conditioning', color:'full', ex:['plank-endo','crunches','air-bike','butt-kicks'] }
+    ],
+    5: [
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','incline-pushup','close-grip-pushup','bench-dips','inverted-row'] },
+      { chip:'Lower', label:'Lower Body', color:'legs', ex:['bodyweight-squat','split-squat','walking-lunges','glute-bridge','step-up-knee-raise'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] },
+      { chip:'Sculpt', label:'Lower-Body Sculpt', color:'full', ex:['single-leg-glute-bridge','side-leg-raise','kneeling-leg-lift','split-jump'] },
+      { chip:'Core & Cardio', label:'Core & Conditioning', color:'core', ex:['plank-endo','crunches','air-bike','flutter-kicks','butt-kicks'] }
+    ],
+    6: [
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['pushups','incline-pushup','close-grip-pushup','inverted-row'] },
+      { chip:'Lower A', label:'Lower A', color:'legs', ex:['bodyweight-squat','split-squat','glute-bridge','walking-lunges'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] },
+      { chip:'Upper B', label:'Upper B', color:'arms', ex:['decline-pushup','wide-pushup','bench-dips','side-plank-pushup'] },
+      { chip:'Lower B', label:'Lower B', color:'full', ex:['step-up-knee-raise','split-jump','single-leg-glute-bridge','side-leg-raise'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['butt-kicks','air-bike','crunches','plank-endo'] }
+    ],
+    7: [
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['pushups','incline-pushup','close-grip-pushup','inverted-row'] },
+      { chip:'Lower A', label:'Lower A', color:'legs', ex:['bodyweight-squat','split-squat','glute-bridge','walking-lunges'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','plyo-pushup','star-jump','mountain-climbers'] },
+      { chip:'Upper B', label:'Upper B', color:'arms', ex:['decline-pushup','wide-pushup','bench-dips','side-plank-pushup'] },
+      { chip:'Lower B', label:'Lower B', color:'full', ex:['step-up-knee-raise','split-jump','single-leg-glute-bridge','side-leg-raise'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['butt-kicks','air-bike','crunches','plank-endo'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  }
+};
+
+// PLANS_HOME_F[bodyType][daysPerWeek] — women's home programs: bodyweight only,
+// glute/lower-body emphasis.
+const PLANS_HOME_F = {
+  ecto: {
+    1: [
+      { chip:'Full Body', label:'Full-Body Home Strength', color:'full', ex:['bodyweight-squat','glute-bridge','incline-pushup','inverted-row','plank'] }
+    ],
+    2: [
+      { chip:'Lower', label:'Glutes & Legs', color:'legs', ex:['bodyweight-squat','glute-bridge','split-squat','kneeling-leg-lift','plank'] },
+      { chip:'Upper', label:'Upper Body Tone', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','inverted-row','side-plank'] }
+    ],
+    3: [
+      { chip:'Glutes & Legs', label:'Glutes & Legs', color:'legs', ex:['glute-bridge','bodyweight-squat','split-squat','kneeling-leg-lift'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','inverted-row'] },
+      { chip:'Core', label:'Core & Full Body', color:'full', ex:['dead-bug','flutter-kicks','side-plank','bent-knee-hip-raise'] }
+    ],
+    4: [
+      { chip:'Glutes', label:'Glute Focus', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','inverted-row'] },
+      { chip:'Legs', label:'Legs', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Core', label:'Core', color:'core', ex:['dead-bug','flutter-kicks','bent-knee-hip-raise','side-plank'] }
+    ],
+    5: [
+      { chip:'Glutes', label:'Glute Focus', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','inverted-row'] },
+      { chip:'Legs', label:'Legs', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Core', label:'Core', color:'core', ex:['dead-bug','flutter-kicks','bent-knee-hip-raise','side-plank'] },
+      { chip:'Power', label:'Power & Conditioning', color:'arms', ex:['jump-squat','split-jump','star-jump','mountain-climbers'] }
+    ],
+    6: [
+      { chip:'Glutes A', label:'Glutes A', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['incline-pushup','pushups','inverted-row','side-plank'] },
+      { chip:'Legs A', label:'Legs A', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Glutes B', label:'Glutes B — Sculpt', color:'legs', ex:['side-leg-raise','kneeling-leg-lift','single-leg-glute-bridge','split-jump'] },
+      { chip:'Upper B', label:'Upper B', color:'chest', ex:['wide-pushup','close-grip-pushup','bench-dips','superman'] },
+      { chip:'Core', label:'Core', color:'core', ex:['dead-bug','flutter-kicks','cross-body-crunch','bent-knee-hip-raise'] }
+    ],
+    7: [
+      { chip:'Glutes A', label:'Glutes A', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['incline-pushup','pushups','inverted-row','side-plank'] },
+      { chip:'Legs A', label:'Legs A', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Glutes B', label:'Glutes B — Sculpt', color:'legs', ex:['side-leg-raise','kneeling-leg-lift','single-leg-glute-bridge','split-jump'] },
+      { chip:'Upper B', label:'Upper B', color:'chest', ex:['wide-pushup','close-grip-pushup','bench-dips','superman'] },
+      { chip:'Core', label:'Core', color:'core', ex:['dead-bug','flutter-kicks','cross-body-crunch','bent-knee-hip-raise'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  },
+  meso: {
+    1: [
+      { chip:'Total Body', label:'Total-Body Home Session', color:'full', ex:['bodyweight-squat','glute-bridge','pushups','inverted-row','russian-twist'] }
+    ],
+    2: [
+      { chip:'Lower', label:'Glutes & Legs', color:'legs', ex:['bodyweight-squat','glute-bridge','split-squat','side-leg-raise','flutter-kicks'] },
+      { chip:'Upper & Core', label:'Upper Body & Core', color:'chest', ex:['pushups','close-grip-pushup','inverted-row','russian-twist','plank'] }
+    ],
+    3: [
+      { chip:'Glutes & Legs', label:'Glutes & Legs', color:'legs', ex:['glute-bridge','bodyweight-squat','split-squat','kneeling-leg-lift'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','wide-pushup','close-grip-pushup','inverted-row'] },
+      { chip:'Sculpt & Core', label:'Sculpt & Core', color:'core', ex:['side-leg-raise','single-leg-glute-bridge','russian-twist','dead-bug'] }
+    ],
+    4: [
+      { chip:'Glutes', label:'Glute Focus', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','wide-pushup','close-grip-pushup','inverted-row','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Conditioning', label:'Conditioning & Core', color:'core', ex:['jump-squat','star-jump','mountain-climbers','russian-twist'] }
+    ],
+    5: [
+      { chip:'Glutes', label:'Glute Focus', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['pushups','wide-pushup','close-grip-pushup','inverted-row','bench-dips'] },
+      { chip:'Legs', label:'Legs', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Conditioning', label:'Conditioning', color:'arms', ex:['jump-squat','split-jump','star-jump','mountain-climbers'] },
+      { chip:'Core', label:'Core', color:'core', ex:['dead-bug','russian-twist','cross-body-crunch','flutter-kicks','plank'] }
+    ],
+    6: [
+      { chip:'Glutes A', label:'Glutes A', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['pushups','close-grip-pushup','inverted-row','side-plank'] },
+      { chip:'Legs A', label:'Legs A', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Glutes B', label:'Glutes B — Sculpt', color:'legs', ex:['side-leg-raise','kneeling-leg-lift','split-jump','single-leg-glute-bridge'] },
+      { chip:'Upper B', label:'Upper B', color:'chest', ex:['decline-pushup','wide-pushup','bench-dips','superman'] },
+      { chip:'Core & Cond.', label:'Core & Conditioning', color:'core', ex:['mountain-climbers','russian-twist','flutter-kicks','dead-bug'] }
+    ],
+    7: [
+      { chip:'Glutes A', label:'Glutes A', color:'legs', ex:['glute-bridge','single-leg-glute-bridge','glute-kickback','kneeling-leg-lift'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['pushups','close-grip-pushup','inverted-row','side-plank'] },
+      { chip:'Legs A', label:'Legs A', color:'full', ex:['bodyweight-squat','split-squat','walking-lunges','step-up-knee-raise'] },
+      { chip:'Glutes B', label:'Glutes B — Sculpt', color:'legs', ex:['side-leg-raise','kneeling-leg-lift','split-jump','single-leg-glute-bridge'] },
+      { chip:'Upper B', label:'Upper B', color:'chest', ex:['decline-pushup','wide-pushup','bench-dips','superman'] },
+      { chip:'Core & Cond.', label:'Core & Conditioning', color:'core', ex:['mountain-climbers','russian-twist','flutter-kicks','dead-bug'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  },
+  endo: {
+    1: [
+      { chip:'Full Circuit', label:'Full-Body Burn Circuit', color:'full', ex:['bodyweight-squat','incline-pushup','glute-kickback','star-jump','plank-endo'] }
+    ],
+    2: [
+      { chip:'Strength', label:'Full-Body Strength', color:'chest', ex:['bodyweight-squat','glute-bridge','incline-pushup','inverted-row','plank-endo'] },
+      { chip:'Cardio Circuit', label:'Cardio Circuit', color:'core', ex:['star-jump','butt-kicks','mountain-climbers','jump-squat','crunches'] }
+    ],
+    3: [
+      { chip:'Lower', label:'Glutes & Legs', color:'legs', ex:['bodyweight-squat','glute-bridge','glute-kickback','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','bench-dips'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['star-jump','butt-kicks','mountain-climbers','crunches'] }
+    ],
+    4: [
+      { chip:'Glutes', label:'Glutes & Legs', color:'legs', ex:['bodyweight-squat','glute-bridge','glute-kickback','single-leg-glute-bridge','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','bench-dips'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'arms', ex:['jump-squat','star-jump','mountain-climbers','butt-kicks'] },
+      { chip:'Core & Cardio', label:'Core & Conditioning', color:'full', ex:['plank-endo','flutter-kicks','air-bike','crunches'] }
+    ],
+    5: [
+      { chip:'Glutes', label:'Glutes & Legs', color:'legs', ex:['bodyweight-squat','glute-bridge','glute-kickback','single-leg-glute-bridge','side-leg-raise'] },
+      { chip:'Upper', label:'Upper Body', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','bench-dips'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','star-jump','mountain-climbers','butt-kicks'] },
+      { chip:'Sculpt', label:'Lower-Body Sculpt', color:'full', ex:['walking-lunges','split-squat','kneeling-leg-lift','step-up-knee-raise'] },
+      { chip:'Core & Cardio', label:'Core & Conditioning', color:'core', ex:['plank-endo','flutter-kicks','air-bike','scissor-kicks','crunches'] }
+    ],
+    6: [
+      { chip:'Lower A', label:'Lower A — Glutes', color:'legs', ex:['bodyweight-squat','glute-bridge','glute-kickback','side-leg-raise'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','bench-dips'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','star-jump','mountain-climbers','butt-kicks'] },
+      { chip:'Lower B', label:'Lower B — Sculpt', color:'legs', ex:['walking-lunges','split-squat','kneeling-leg-lift','single-leg-glute-bridge'] },
+      { chip:'Upper B', label:'Upper B', color:'arms', ex:['wide-pushup','side-plank-pushup','superman','inverted-row'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['air-bike','flutter-kicks','crunches','plank-endo'] }
+    ],
+    7: [
+      { chip:'Lower A', label:'Lower A — Glutes', color:'legs', ex:['bodyweight-squat','glute-bridge','glute-kickback','side-leg-raise'] },
+      { chip:'Upper A', label:'Upper A', color:'chest', ex:['incline-pushup','pushups','close-grip-pushup','bench-dips'] },
+      { chip:'Circuit', label:'Full-Body Circuit', color:'back', ex:['jump-squat','star-jump','mountain-climbers','butt-kicks'] },
+      { chip:'Lower B', label:'Lower B — Sculpt', color:'legs', ex:['walking-lunges','split-squat','kneeling-leg-lift','single-leg-glute-bridge'] },
+      { chip:'Upper B', label:'Upper B', color:'arms', ex:['wide-pushup','side-plank-pushup','superman','inverted-row'] },
+      { chip:'Cardio & Core', label:'Cardio & Core', color:'core', ex:['air-bike','flutter-kicks','crunches','plank-endo'] },
+      { chip:'Recovery', label:'Mobility & Recovery', color:'core', ex:['inchworm','cat-stretch','hamstring-calf-stretch','chest-shoulder-stretch'] }
+    ]
+  }
+};
+
 function getDaysPerWeek() {
   const p = getProfile();
   return (p && [1,2,3,4,5,6,7].includes(p.daysPerWeek)) ? p.daysPerWeek : 4;
@@ -585,7 +891,18 @@ function currentPlanSex() {
   const p = getProfile();
   return (p && p.sex === 'female') ? 'female' : 'male';
 }
-function planSetFor(sex) { return sex === 'female' ? PLANS_F : PLANS; }
+// Where the user trains (gym/home): an explicit template pick wins; otherwise
+// the profile's onboarding answer; gym by default.
+function currentPlanPlace() {
+  const a = getActive();
+  if (a && (a.planPlace === 'home' || a.planPlace === 'gym')) return a.planPlace;
+  const p = getProfile();
+  return (p && p.place === 'home') ? 'home' : 'gym';
+}
+function planSetFor(sex, place) {
+  if (place === 'home') return sex === 'female' ? PLANS_HOME_F : PLANS_HOME;
+  return sex === 'female' ? PLANS_F : PLANS;
+}
 // Resolves what the Plan page shows: the active custom routine, or the body-type template
 function currentPlan() {
   const a = getActive();
@@ -593,7 +910,7 @@ function currentPlan() {
     const r = getRoutines().find(x => x.id === a.routineId);
     if (r && r.days && r.days.length) return r.days;
   }
-  return planSetFor(currentPlanSex())[currentBodyType][getDaysPerWeek()];
+  return planSetFor(currentPlanSex(), currentPlanPlace())[currentBodyType][getDaysPerWeek()];
 }
 function activeRoutine() {
   const a = getActive();

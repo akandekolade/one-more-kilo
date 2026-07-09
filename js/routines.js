@@ -102,25 +102,39 @@ function renderRoutinesPage() {
     const profile = getProfile();
     const mySex = (profile && profile.sex === 'female') ? 'female' : 'male';
     const order = mySex === 'female' ? ['female', 'male'] : ['male', 'female'];
-    tplEl.innerHTML = order.map(sex => {
-      const heading = sex === 'female' ? "Women's plans" : "Men's plans";
+    if (routinesPlace === null) routinesPlace = currentPlanPlace();
+    const placeSeg = `
+      <div class="seg-label">Where are you training?</div>
+      <div class="seg" style="margin-bottom:4px">
+        <button class="${routinesPlace === 'gym' ? 'active' : ''}" onclick="setRoutinesPlace('gym')">🏋️ Gym</button>
+        <button class="${routinesPlace === 'home' ? 'active' : ''}" onclick="setRoutinesPlace('home')">🏠 Home (no equipment)</button>
+      </div>`;
+    tplEl.innerHTML = placeSeg + order.map(sex => {
+      const heading = (sex === 'female' ? "Women's" : "Men's") + (routinesPlace === 'home' ? ' home plans' : ' gym plans');
       const cards = ['ecto', 'meso', 'endo'].map(bt => {
-        const inUse = usingTemplate && currentBodyType === bt && currentPlanSex() === sex;
+        const inUse = usingTemplate && currentBodyType === bt && currentPlanSex() === sex && currentPlanPlace() === routinesPlace;
         return `<div class="info-card routine-card">
           <div class="routine-info">
             <div class="info-title">${BODY_TYPE_NAMES[bt]} ${inUse ? '<span class="ex-badge badge-legs">In use</span>' : ''}</div>
-            <div class="info-body">${BODY_GUIDES[bt].subtitle}${sex === 'female' ? ' · glute & lower-body focus' : ''}</div>
+            <div class="info-body">${BODY_GUIDES[bt].subtitle}${sex === 'female' ? ' · glute & lower-body focus' : ''}${routinesPlace === 'home' ? ' · no equipment' : ''}</div>
             <div class="seg" style="margin-top:10px" id="tpl-days-${sex}-${bt}">
               ${[1, 2, 3, 4, 5, 6, 7].map(n => `<button class="${(inUse && getDaysPerWeek() === n) ? 'active' : ''}" onclick="useTemplate('${bt}',${n},'${sex}')">${n}</button>`).join('')}
             </div>
             <button class="ex-action-btn" style="margin-top:10px;width:100%" onclick="duplicateTemplate('${bt}','${sex}')">⧉ Duplicate &amp; customize</button>
           </div>
-          ${thumbFor(planSetFor(sex)[bt][4][0].ex[0])}
+          ${thumbFor(planSetFor(sex, routinesPlace)[bt][4][0].ex[0])}
         </div>`;
       }).join('');
       return `<div class="seg-label" style="margin-top:14px">${heading}</div>${cards}`;
     }).join('');
   }
+}
+
+// Gym/Home pre-filter for the recommended plans list (defaults to the active place)
+let routinesPlace = null;
+function setRoutinesPlace(place) {
+  routinesPlace = place;
+  renderRoutinesPage();
 }
 
 function useRoutine(id) {
@@ -135,9 +149,15 @@ function useTemplate(bt, days, sex) {
   profile.bodyType = bt;
   profile.daysPerWeek = days;
   saveProfile(profile);
-  // Remember an explicit cross-gender pick; otherwise the plan follows the profile's sex
+  // Remember an explicit cross-gender pick; otherwise the plan follows the profile's sex.
+  // The gym/home choice from the switch above the list is always carried along.
   const mySex = (profile.sex === 'female') ? 'female' : 'male';
-  saveActive(sex && sex !== mySex ? { kind: 'template', planSex: sex } : { kind: 'template' });
+  const a = { kind: 'template' };
+  if (sex && sex !== mySex) a.planSex = sex;
+  const place = routinesPlace || currentPlanPlace();
+  const myPlace = (profile.place === 'home') ? 'home' : 'gym';
+  if (place !== myPlace) a.planPlace = place;
+  saveActive(a);
   renderRoutinesPage();
   applyBodyType(bt);
   updateProfileLabels();
@@ -202,9 +222,10 @@ function duplicateRoutine(id) {
 
 // Copy a recommended plan into the builder so it can be extended and saved as a custom routine
 function duplicateTemplate(bt, sex) {
-  const days = planSetFor(sex)[bt][getDaysPerWeek()];
+  const place = routinesPlace || currentPlanPlace();
+  const days = planSetFor(sex, place)[bt][getDaysPerWeek()];
   builderState = {
-    name: `${BODY_TYPE_NAMES[bt]}${sex === 'female' ? ' (Women)' : ''} — my version`,
+    name: `${BODY_TYPE_NAMES[bt]}${sex === 'female' ? ' (Women)' : ''}${place === 'home' ? ' Home' : ''} — my version`,
     type: 'weekly',
     days: days.map(d => ({ label: d.label, ex: d.ex.slice() }))
   };
