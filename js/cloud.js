@@ -218,7 +218,7 @@ function forgotPassword() {
   const errEl = document.getElementById('login-error');
   if (!email) { errEl.textContent = 'Type your email above first, then tap "Forgot password?".'; return; }
   auth.sendPasswordResetEmail(email)
-    .then(() => { errEl.style.color = 'var(--primary)'; errEl.textContent = `Reset link sent to ${email} — check your inbox.`; })
+    .then(() => { errEl.style.color = 'var(--primary)'; errEl.textContent = `Reset link sent to ${email} — check your inbox and spam folder. No mail means no account exists under this exact email.`; })
     .catch(e => { errEl.style.color = '#e87a50'; errEl.textContent = e.message; });
 }
 
